@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HomeScreen from './src/composants/HomeScreen'
-import BoutiqueScreen from './src/composants/BoutiqueScreen'
-import OuvertureScreen from './src/composants/OuvertureScrenn'
-import AmisScreen  from './src/composants/AmisScreen'
-import ProfilScreen from './src/composants/ProfilScreen'
+import HomeScreen from './src/components/HomeScreen'
+import BoutiqueScreen from './src/components/BoutiqueScreen'
+import OuvertureScreen from './src/components/OuvertureScrenn'
+import AmisScreen  from './src/components/AmisScreen'
+import ProfilScreen from './src/components/ProfilScreen'
+
 function SettingsScreen() {
   return (
     <View style={{ flex: 1, justifyContent:  'center', alignItems: 'center' }}>
@@ -73,12 +74,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-    <Tab.Navigator
-      initialRouteName="Feed"
-      screenOptions={{
-        tabBarActiveTintColor: '#e91e63',
-      }}
-    >
+    <Tab.Navigator initialRouteName="Feed" screenOptions={{ tabBarActiveTintColor: '#e91e63' }}>
         <Tab.Screen name="Boutique" component={BoutiqueScreen} 
          options={{
           tabBarLabel: 'Boutique',
