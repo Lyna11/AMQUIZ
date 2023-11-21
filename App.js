@@ -2,15 +2,12 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import HomeScreen from './src/composants/HomeScreen'
+import BoutiqueScreen from './src/composants/BoutiqueScreen'
+import OuvertureScreen from './src/composants/OuvertureScrenn'
+import AmisScreen  from './src/composants/AmisScreen'
+import ProfilScreen from './src/composants/ProfilScreen'
 function SettingsScreen() {
   return (
     <View style={{ flex: 1, justifyContent:  'center', alignItems: 'center' }}>
@@ -76,12 +73,52 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />}>
-        <Tab.Screen name="Boutique" component={HomeScreen} />
-        <Tab.Screen name="Opening" component={SettingsScreen} />
-        <Tab.Screen name="Home" component={SettingsScreen} />
-        <Tab.Screen name="Amis" component={SettingsScreen} />
-        <Tab.Screen name="Profil" component={SettingsScreen} />
+    <Tab.Navigator
+      initialRouteName="Feed"
+      screenOptions={{
+        tabBarActiveTintColor: '#e91e63',
+      }}
+    >
+        <Tab.Screen name="Boutique" component={BoutiqueScreen} 
+         options={{
+          tabBarLabel: 'Boutique',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="shopping" color={color} size={size} />
+          ),
+          
+        }}/>
+        <Tab.Screen name="Ouverture" component={OuvertureScreen} 
+         options={{
+          tabBarLabel: 'Ouverture',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="treasure-chest" color={color} size={size} />
+          ),
+          
+        }}/>
+        <Tab.Screen name="Accueil" component={HomeScreen}
+         options={{
+          tabBarLabel: 'Accueil',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+          
+        }} />
+        <Tab.Screen name="Amis" component={AmisScreen}
+         options={{
+          tabBarLabel: 'Amis',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account-multiple-plus" color={color} size={size} />
+          ),
+          
+        }} />
+        <Tab.Screen name="Profil" component={ProfilScreen} 
+         options={{
+          tabBarLabel: 'Profil',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+          
+        }}/>
       </Tab.Navigator>
     </NavigationContainer>
   );
