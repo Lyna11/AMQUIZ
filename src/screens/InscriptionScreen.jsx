@@ -1,7 +1,6 @@
 import * as React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Linking } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import InscriptionScreen from "./InscriptionScreen";
 
 export default function BoutiqueScreen() {
   return (
@@ -16,9 +15,7 @@ export default function BoutiqueScreen() {
         <Text style={styles.underscore}>Mot de passe oublié ?</Text>
         <View style={styles.noAccount}>
           <Text style={styles.greenText}>Pas de compte ?</Text>
-          <Text style={styles.underscore} onPress={() => this.props.navigation.navigate(InscriptionScreen)}>
-            S'inscrire
-          </Text>
+          <Text style={styles.underscore}>S'inscrire</Text>
         </View>
       </View>
     </View>
