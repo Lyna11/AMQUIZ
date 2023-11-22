@@ -1,21 +1,35 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 export default function BoutiqueScreen() {
 
   // Rendu
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>SHOP</Text>
-    </View>
+    <SafeAreaView>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>     
+      </View> 
+    </SafeAreaView>
   );
   
 }
 
 /* Pour CSS */
 const styles = StyleSheet.create({
-  /* TODO */
+  titleBarContainer: {
+    backgroundColor: '#4F6D7A',
+    paddingVertical: 15,
+    paddingHorizontal: 80,
+    borderRadius: 30,
+    marginTop: 50,
+  },
+  titleContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'white',
+    marginLeft: 0, // Espace entre l'icône et le texte
+  }, 
 });

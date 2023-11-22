@@ -24,6 +24,7 @@ export default function App() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="shopping" color={color} size={size} />
           ),
+          headerShown:false
           
         }}/>
         <Tab.Screen name="Unboxing" component={OuvertureScreen} 
@@ -32,6 +33,7 @@ export default function App() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="treasure-chest" color={color} size={size} />
           ),
+          headerShown:false
           
         }}/>
         <Tab.Screen name="Home" component={HomeScreen}
@@ -40,6 +42,7 @@ export default function App() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
+          headerShown:false
           
         }} />
         <Tab.Screen name="Social" component={AmisScreen}
@@ -48,7 +51,7 @@ export default function App() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account-multiple-plus" color={color} size={size} />
           ),
-          
+          headerShown:false
         }} />
         <Tab.Screen name="Profile" component={ProfilScreen} 
          options={{
@@ -56,7 +59,7 @@ export default function App() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
-          
+          headerShown:false
         }}/>
       </Tab.Navigator>
     </NavigationContainer>
