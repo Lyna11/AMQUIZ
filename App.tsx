@@ -15,13 +15,13 @@ const Stack = createStackNavigator();
 
 const App = () => {
   return (
-      <NavigationContainer>
-        <Stack.Navigator >
-          <Stack.Screen name="Connexion" component={ConnexionScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Menu" component={MenuScreen} options={{ headerShown: false, gestureEnabled: false }}  />
-          <Stack.Screen name="Inscription" component={InscriptionScreen} options={{ headerShown: false }}  />
-        </Stack.Navigator>
-      </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator >
+        <Stack.Screen name="Connexion" component={ConnexionScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Menu" component={MenuScreen} options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="Inscription" component={InscriptionScreen} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
 
   );
 };

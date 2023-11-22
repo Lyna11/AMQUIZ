@@ -2,37 +2,96 @@
 export const questionsQuizz = {
     questions: [
         {
-            question: "Blablablabla?",
+            question: "Lequel des ces personnages est le 1er Hokage?",
             choices: [
-                "Blablabla 1",
-                "Blablabla 2",
-                "Blablabla 3",
-                "Blablabla 4"
+                {
+                    id: 1,
+                    answer: "Hachirama Senzu",
+                },
+                {
+                    id: 2,
+                    answer: "Naruto Uzumaki",
+                },
+                {
+                    id: 3,
+                    answer: "Hashirama Senju",
+                },
+                {
+                    id: 4,
+                    answer: "Tobirama Senju",
+                }
             ],
             type: "QCM",
-            answer: "Blablabla 3"
+            answerId: 3
         },
         {
-            question: "Blablablabla? v2",
+            question: "Quel antagoniste principal fait sa réapparition lors de la 4ème Grande Guerre Ninja?",
             choices: [
-                "Blablabla 1",
-                "Blablabla 2",
-                "Blablabla 3",
-                "Blablabla 4"
+                {
+                    id: 1,
+                    answer: "Sasuke Uchiha",
+                },
+                {
+                    id: 2,
+                    answer: "Popeye",
+                },
+                {
+                    id: 3,
+                    answer: "Tobi Uchiha",
+                },
+                {
+                    id: 4,
+                    answer: "Madara Uchiha",
+                } 
             ],
             type: "QCM",
-            answer: "Blablabla 4"
+            answerId: 4
         },
         {
-            question: "Blablablabla? v3",
+            question: "Quel personnage principal peut recopier n'importe quelle technique grâce à son oeil?",
             choices: [
-                "Blablabla 1",
-                "Blablabla 2",
-                "Blablabla 3",
-                "Blablabla 4"
+                {
+                    id: 1,
+                    answer: "Kakashi Hatake",
+                },
+                {
+                    id: 2,
+                    answer: "Naruto Uzumaki",
+                },
+                {
+                    id: 3,
+                    answer: "Boruto Uzumaki",
+                },
+                {
+                    id: 4,
+                    answer: "Hinata Hyuuga",
+                }
             ],
             type: "QCM",
-            answer: "Blablabla 1"
+            answerId: 1
         },
+        {
+            question: "Quel personnage enseigne le Rasengan à Naruto?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "Boruto",
+                },
+                {
+                    id: 2,
+                    answer: "Jiraya",
+                },
+                {
+                    id: 3,
+                    answer: "Pain",
+                },
+                {
+                    id: 4,
+                    answer: "Nagato",
+                }
+            ],
+            type: "QCM",
+            answerId: 2
+        }
     ]
 }
