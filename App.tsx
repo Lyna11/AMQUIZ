@@ -17,50 +17,52 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-    <Tab.Navigator initialRouteName="Feed" screenOptions={{ tabBarActiveTintColor: '#e91e63' }}>
-        <Tab.Screen name="Shop" component={BoutiqueScreen} 
-         options={{
-          tabBarLabel: 'Shop',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="shopping" color={color} size={size} />
-          ),
-          headerShown:false
-          
-        }}/>
-        <Tab.Screen name="Unboxing" component={OuvertureScreen} 
-         options={{
-          tabBarLabel: 'Unboxing',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="treasure-chest" color={color} size={size} />
-          ),
-          headerShown:false
-          
-        }}/>
-        <Tab.Screen name="Home" component={HomeScreen}
-         options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
-          headerShown:false
-          
-        }} />
-        <Tab.Screen name="Social" component={AmisScreen}
-         options={{
-          tabBarLabel: 'Social',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account-multiple-plus" color={color} size={size} />
-          ),
-          headerShown:false
-        }} />
-        <Tab.Screen name="Profile" component={ProfilScreen} 
-         options={{
-          tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
-          ),
-          headerShown:false
-        }}/>
+      <Tab.Navigator initialRouteName="Feed" screenOptions={{ tabBarActiveTintColor: "#e91e63" }}>
+        <Tab.Screen
+          name="Shop"
+          component={BoutiqueScreen}
+          options={{
+            tabBarLabel: "Shop",
+            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="shopping" color={color} size={size} />,
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Unboxing"
+          component={OuvertureScreen}
+          options={{
+            tabBarLabel: "Unboxing",
+            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="treasure-chest" color={color} size={size} />,
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarLabel: "Home",
+            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="home" color={color} size={size} />,
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Social"
+          component={AmisScreen}
+          options={{
+            tabBarLabel: "Social",
+            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account-multiple-plus" color={color} size={size} />,
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfilScreen}
+          options={{
+            tabBarLabel: "Profile",
+            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account" color={color} size={size} />,
+            headerShown: false,
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

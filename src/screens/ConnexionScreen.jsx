@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView } from "react-native";
 import InscriptionScreen from "./InscriptionScreen";
 
 export default function ConnexionScreen() {
@@ -9,26 +9,28 @@ export default function ConnexionScreen() {
     setShowConnexion(false);
   };
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
-      {showConnexion && (
-        <View style={styles.container}>
-          <Text style={styles.title}>Quiz animés/mangas</Text>
-          <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Mot de passe" />
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Se connecter</Text>
-          </TouchableOpacity>
-          <Text style={styles.underscore}>Mot de passe oublié ?</Text>
-          <View style={styles.noAccount}>
-            <Text style={styles.greenText}>Pas de compte ?</Text>
-            <TouchableOpacity onPress={handleInscriptionPress}>
-              <Text style={styles.underscore}>S'inscrire</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
+        {showConnexion && (
+          <View style={styles.container}>
+            <Text style={styles.title}>Quiz animés/mangas</Text>
+            <TextInput style={styles.input} placeholder="Email" />
+            <TextInput style={styles.input} placeholder="Mot de passe" />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Se connecter</Text>
             </TouchableOpacity>
+            <Text style={styles.underscore}>Mot de passe oublié ?</Text>
+            <View style={styles.noAccount}>
+              <Text style={styles.greenText}>Pas de compte ?</Text>
+              <TouchableOpacity onPress={handleInscriptionPress}>
+                <Text style={styles.underscore}>S'inscrire</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      )}
-      {!showConnexion && <InscriptionScreen />}
-    </View>
+        )}
+        {!showConnexion && <InscriptionScreen />}
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: "center",
     marginBottom: 16,
-    fontStyle: "bold",
   },
   input: {
     borderColor: "#84AFBE",
