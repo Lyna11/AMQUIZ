@@ -1,20 +1,20 @@
-import * as React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as React from "react";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import HomeScreen from './src/screens/HomeScreen';
-import BoutiqueScreen from './src/screens/ShopScreen';
-import OuvertureScreen from './src/screens/UnboxingScreen';
-import AmisScreen  from './src/screens/SocialScreen';
-import ProfilScreen from './src/screens/ProfileScreen';
+import ConnexionScreen from "./src/screens/ConnexionScreen";
+import HomeScreen from "./src/screens/HomeScreen";
+import BoutiqueScreen from "./src/screens/ShopScreen";
+import OuvertureScreen from "./src/screens/UnboxingScreen";
+import AmisScreen from "./src/screens/SocialScreen";
+import ProfilScreen from "./src/screens/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
 /* VRAI APP A CONSERVER */
 export default function App() {
-
   return (
     <NavigationContainer>
     <Tab.Navigator initialRouteName="Feed" screenOptions={{ tabBarActiveTintColor: '#e91e63' }}>
@@ -64,14 +64,13 @@ export default function App() {
       </Tab.Navigator>
     </NavigationContainer>
   );
-
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
