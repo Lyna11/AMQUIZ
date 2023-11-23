@@ -1,35 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Button } from 'react-native';
 
-import { questionsQuizz } from '../config/questions';
+import { questionsNaruto, questionsDbz } from '../config/questions';
 
 // Ecran de Quizz
 export default function QuizzScreen() {
 
     // Données questions.ts
-    const data = questionsQuizz.questions;
+    const data = questionsDbz.questions; // TODO: choix série
     const totalQuestions = data.length;
     // Index questions
     const [index, setIndex] = useState(0);
+    // Question actuelle
     const currentQuestion = data[index];
     // Compteur score
     const [score, setScore] = useState(0);
     // Statut réponse (True = en cours / False = fini)
-    const [quizzStatus, setQuizzStatus] = useState(true);
+    const [quizzStatus, setQuizzStatus] = useState(false);
     // Réponse choisie
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
     // Valeurs Timer
-    const [countdown, setCountdown] = useState<number>(10);
+    const [countdown, setCountdown] = useState<number>(7);
     const [isPaused, setIsPaused] = useState<boolean>(true)
+    // Booléen fin du quizz
+    let finQuizz = false;
 
-    // Gestion du timer
+    // Gestion du Timer
     useEffect(() => {
         if (isPaused) return;
         // Si le compteur atteint 0 on passe à la question suivante
-        if (countdown === 0) {
-            setIndex((index) => index + 1);
-            setCountdown(10);
-            setScore((score) => score - 5);
+        if (countdown === 0 || countdown < 0) {
+            // Evite que le score soit négatif
+            if (score >= 5) {
+                setScore((score) => score - 5);
+            } else {
+                setScore(0);
+            }
+            if (index < data.length) {
+                setIndex((index) => index + 1);
+            }
+            setCountdown(7);
         }
         const interval = setInterval(() => {
             setCountdown((countdown) => countdown - 1)
@@ -38,11 +48,24 @@ export default function QuizzScreen() {
         return () => clearInterval(interval);
     }, [countdown, isPaused]);
 
+    // Gestion boucle de jeu
+    useEffect(() => { 
+        // Lancement du Timer
+        if (quizzStatus === true) {
+            setIsPaused(false);
+        } else {
+            setIsPaused(true);
+        }
+        // Le quizz s'arrête lorsqu'il n'y a plus de questions
+        if (currentQuestion === null || index > 10 || currentQuestion.question === undefined) {
+            setIsPaused(true);
+            setQuizzStatus(false);
+            finQuizz = true;
+        }
+    }, [quizzStatus]);
+
     // Gestion choix réponses
     useEffect(() => {
-        // Lance le timer
-        setIsPaused(true);
-        // TODO : gestion du timer hors page / intermédiaire pour démarrer le quizz
         // Null check
         if (selectedAnswer === null || !currentQuestion) return;
         // Timeout
@@ -52,23 +75,21 @@ export default function QuizzScreen() {
             timeout = setTimeout(() => {
                 setScore((score) => score + 10);
                 setIndex((index) => index + 1);
-                setCountdown(10);
+                setCountdown(7);
                 setSelectedAnswer(null);
-                console.log("bonne réponse");
-            }, 1500);
+            }, 1000);
         // Si la réponse est fausse...
         } else {
             timeout = setTimeout(() => {
-                if (score > 5) {
+                if (score >= 5) {
                     setScore((score) => score - 5);
                 } else {
                     setScore(0);
                 }
                 setIndex((index) => index + 1);
-                setCountdown(10);
+                setCountdown(7);
                 setSelectedAnswer(null); 
-                console.log("mauvaise réponse");
-            }, 1500);
+            }, 1000);
         }
         // Nettoyage timeout
         return () => {
@@ -76,40 +97,41 @@ export default function QuizzScreen() {
         }
     }, [selectedAnswer]);
 
-    // Fin du Quizz (plus de questions)
-    useEffect(() => {
-        if (currentQuestion == null || data[index].question == null) {
-            setQuizzStatus(false);
-        }
-    }, [currentQuestion]);
+    /****************************************************************/
 
     // Rendu
     return (
+
         <SafeAreaView>
+
             <Text style={styles.title}>QUIZZ</Text>
 
-            <Text style={styles.timer}>TIMER: {countdown}s</Text>
+            {quizzStatus === false ? <Button title="Démarrer" onPress={() => setQuizzStatus(true)}></Button> :
+                <>    
+                <Text style={styles.timer}>TIMER: {countdown}s</Text><Text style={styles.counter}>{finQuizz === false ? "Score : " + score : 'Quizz terminé ! Résultat : ' + score + '/' + (totalQuestions * 10)}</Text><View>
+                    <Text style={styles.question}>
+                        {index === data.length ? undefined : '(' + (index + 1) + '/' + totalQuestions + ') ' + currentQuestion?.question}
+                    </Text>
 
-            <Text style={styles.counter}>{quizzStatus === true ? "Score : " + score : 'Quizz terminé ! Résultat : ' + score + '/' + (totalQuestions * 10)}</Text>
-            
-            <Text style={styles.question}>
-                {index + 1 > data.length ? undefined : '(' + (index + 1) + '/' + totalQuestions + ')'} {currentQuestion?.question}
-            </Text>
-            
-            <View style={{ marginTop: 10 }}>
-                {currentQuestion?.choices.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={() => setSelectedAnswer(item.id)} style={{ borderColor: "red", padding: 10}}>
-                        
-                        <View style={styles.cards}> 
+                    <View style={{ marginTop: 10 }}>
+                        {currentQuestion?.choices.map((item, index) => (
 
-                            <Text style={{color: selectedAnswer === item.id ? (selectedAnswer === currentQuestion.answerId ? 'green' : 'red') : undefined}}>
-                                {item.id}. {item.answer}
-                            </Text>
-                        
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </View>
+                            <TouchableOpacity key={index} onPress={() => setSelectedAnswer(item.id)} style={{ borderColor: "red", padding: 10 }}>
+                                <View style={styles.cards}>
+
+                                    <Text style={{ color: selectedAnswer === item.id ? (selectedAnswer === currentQuestion.answerId ? 'green' : 'red') : undefined }}>
+                                        {item.id} - {item.answer}
+                                    </Text>
+
+                                </View>
+                            </TouchableOpacity>
+
+                        ))}
+                    </View>
+
+                </View>
+                </>
+            }
 
         </SafeAreaView>
     );
@@ -139,7 +161,7 @@ const styles = StyleSheet.create({
         borderColor: "black",
         borderRadius: 20,
         padding: 5,
-        maxWidth: 200,
+        maxWidth: 250,
         textShadowRadius: 1,
         textShadowColor: "black",
     },
