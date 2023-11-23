@@ -10,7 +10,7 @@ export const questionsQuizz = {
                 "Blablabla 4"
             ],
             type: "QCM",
-            answer: "Blablabla 3"
+            answer: "Blablabla 3",
         },
         {
             question: "Blablablabla? v2",
