@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView } from "react-native";
 import ConnexionScreen from "./ConnexionScreen";
 
 export default function InscriptionScreen() {
@@ -9,26 +9,28 @@ export default function InscriptionScreen() {
     setShowInscription(false);
   };
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
-      {showInscription && (
-        <View style={styles.container}>
-          <Text style={styles.title}>Quiz animés/mangas</Text>
-          <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Pseudo" />
-          <TextInput style={styles.input} placeholder="Mot de passe" />
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>S'inscrire</Text>
-          </TouchableOpacity>
-          <View style={styles.noAccount}>
-            <Text style={styles.greenText}>Déjà un compte ?</Text>
-            <TouchableOpacity onPress={handleInscriptionPress}>
-              <Text style={styles.underscore}>Se Connecter</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
+        {showInscription && (
+          <View style={styles.container}>
+            <Text style={styles.title}>Quiz animés/mangas</Text>
+            <TextInput style={styles.input} placeholder="Email" />
+            <TextInput style={styles.input} placeholder="Pseudo" />
+            <TextInput style={styles.input} placeholder="Mot de passe" />
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>S'inscrire</Text>
             </TouchableOpacity>
+            <View style={styles.noAccount}>
+              <Text style={styles.greenText}>Déjà un compte ?</Text>
+              <TouchableOpacity onPress={handleInscriptionPress}>
+                <Text style={styles.underscore}>Se Connecter</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      )}
-      {!showInscription && <ConnexionScreen />}
-    </View>
+        )}
+        {!showInscription && <ConnexionScreen />}
+      </View>
+    </SafeAreaView>
   );
 }
 
