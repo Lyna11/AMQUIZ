@@ -13,28 +13,28 @@ export default function SocialScreen() {
           {/* Il faudra faire une petite boucle for pour afficher qu'une view 4 fois ICI AFFICHAGE STATIQUE Pour le moment */}
 
           <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("./Avatar1.png")} />
+            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
             <View style={{ flexDirection: "column" }}>
               <Text style={styles.pseudo}>Pseudo</Text>
               <Text style={styles.description}>Description</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("./Avatar1.png")} />
+            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
             <View style={{ flexDirection: "column" }}>
               <Text style={styles.pseudo}>Pseudo</Text>
               <Text style={styles.description}>Description</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("./Avatar1.png")} />
+            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
             <View style={{ flexDirection: "column" }}>
               <Text style={styles.pseudo}>Pseudo</Text>
               <Text style={styles.description}>Description</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("./Avatar1.png")} />
+            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
             <View style={{ flexDirection: "column" }}>
               <Text style={styles.pseudo}>Pseudo</Text>
               <Text style={styles.description}>Description</Text>
