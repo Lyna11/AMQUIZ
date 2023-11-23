@@ -5,7 +5,7 @@ export default function BoutiqueScreen() {
   // Rendu
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
+      <View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         <Title_ text="COFFRES" />
         <View style={styles.line}>
           <RoundedSquare montant="2000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>

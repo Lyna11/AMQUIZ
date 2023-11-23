@@ -1,49 +1,81 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView, Image, Modal } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView, Image, Modal, ScrollView, Dimensions } from "react-native";
 
 export default function SocialScreen() {
   const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
         <View style={styles.container}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Inviter un ami</Text>
           </TouchableOpacity>
           {/* Il faudra faire une petite boucle for pour afficher qu'une view 4 fois ICI AFFICHAGE STATIQUE Pour le moment */}
-
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
-            <View style={{ flexDirection: "column" }}>
-              <Text style={styles.pseudo}>Pseudo</Text>
-              <Text style={styles.description}>Description</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
-            <View style={{ flexDirection: "column" }}>
-              <Text style={styles.pseudo}>Pseudo</Text>
-              <Text style={styles.description}>Description</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
-            <View style={{ flexDirection: "column" }}>
-              <Text style={styles.pseudo}>Pseudo</Text>
-              <Text style={styles.description}>Description</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
-            <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
-            <View style={{ flexDirection: "column" }}>
-              <Text style={styles.pseudo}>Pseudo</Text>
-              <Text style={styles.description}>Description</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonRefresh}>
-            <Text style={styles.buttonText}>R</Text>
-          </TouchableOpacity>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.cards}>
+              <Image style={styles.imgProfil} source={require("../../assets/img/Avatar1.png")} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.pseudo}>Pseudo</Text>
+                <Text style={styles.description}>Description</Text>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
+      </View>
+      <View style={{ backgroundColor: "#DBE9EE", height: "8%" }}>
+        <TouchableOpacity style={styles.buttonRefresh}>
+          <Text style={styles.buttonText}>R</Text>
+        </TouchableOpacity>
       </View>
       <Modal
         style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
@@ -81,14 +113,16 @@ export default function SocialScreen() {
     </SafeAreaView>
   );
 }
-
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     justifyContent: "center",
-    height: "100%",
     width: "80%",
     backgroundColor: "#DBE9EE",
+    paddingTop: screenHeight / 10,
+    marginBottom: 50,
   },
   containerModal: {
     flexDirection: "row",
