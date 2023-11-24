@@ -78,17 +78,22 @@ const InscriptionScreen = ({ navigation }) => {
     }
 
     try {
-      const emailExists = await checkExistingEmail(email);
-      if (emailExists) {
-        setErrorMessage("L'adresse e-mail existe déjà");
-        return;
+      const emailExiste = await checkExistingEmail(email);
+      if (!emailExiste) {
+        createUserWithEmailAndPassword(auth, email, motDePasse)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+            navigation.navigate("Connexion");
+          })
+          .catch((error) => {
+            setErrorMessage("L'e-mail est déjà utilisé");
+          });
+      } else {
+        setErrorMessage("L'e-mail est déjà utilisé");
       }
-
-      createUserWithEmailAndPassword(auth, email, motDePasse)
-        .then(() => navigation.navigate("Connexion"))
-        .catch((error) => console.log(error));
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.message);
     }
   };
   return (
@@ -121,8 +126,6 @@ const InscriptionScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-
-      {emailDejaUtilise && <Text style={styles.errorMessage}>Cette adresse e-mail est déjà utilisée</Text>}
       {errorMessage !== "" && <Text style={styles.errorMessage}>{errorMessage}</Text>}
     </View>
   );
@@ -183,6 +186,9 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: "red",
     marginTop: -100,
+  },
+  inputInvalid: {
+    borderColor: "red",
   },
 });
 
