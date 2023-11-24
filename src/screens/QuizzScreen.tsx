@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Button } from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown';
 
-import { questionsNaruto, questionsDbz } from '../config/questions';
+import { questions } from '../config/questions';
 
 // Ecran de Quizz
 export default function QuizzScreen() {
 
     // Données questions.ts
-    const data = questionsDbz.questions; // TODO: choix série
+    const [data, setData] = useState(questions.naruto); // choix par défaut obligé
     const totalQuestions = data.length;
+    const theme = ["Naruto", "DragonBall"]; // liste des thèmes
     // Index questions
     const [index, setIndex] = useState(0);
     // Question actuelle
@@ -23,7 +25,17 @@ export default function QuizzScreen() {
     const [countdown, setCountdown] = useState<number>(7);
     const [isPaused, setIsPaused] = useState<boolean>(true)
     // Booléen fin du quizz
-    let finQuizz = false;
+    const [finQuizz, setFinQuizz] = useState(false);
+
+    // Gestion du choix de thème
+    function setTheme(item: string) {
+        if (item === "Naruto") {
+            setData(questions.naruto);
+        }
+        if (item === "DragonBall") {
+            setData(questions.dragonball);
+        }
+    }
 
     // Gestion du Timer
     useEffect(() => {
@@ -53,16 +65,14 @@ export default function QuizzScreen() {
         // Lancement du Timer
         if (quizzStatus === true) {
             setIsPaused(false);
-        } else {
-            setIsPaused(true);
-        }
+            setFinQuizz(false);
+        } 
         // Le quizz s'arrête lorsqu'il n'y a plus de questions
-        if (currentQuestion === null || index > 10 || currentQuestion.question === undefined) {
+        if ((quizzStatus === true && index >= data.length) || currentQuestion === undefined) {
             setIsPaused(true);
-            setQuizzStatus(false);
-            finQuizz = true;
+            setFinQuizz(true);
         }
-    }, [quizzStatus]);
+    }, [currentQuestion, quizzStatus]);
 
     // Gestion choix réponses
     useEffect(() => {
@@ -106,15 +116,26 @@ export default function QuizzScreen() {
 
             <Text style={styles.title}>QUIZZ</Text>
 
-            {quizzStatus === false ? <Button title="Démarrer" onPress={() => setQuizzStatus(true)}></Button> :
-                <>    
-                <Text style={styles.timer}>TIMER: {countdown}s</Text><Text style={styles.counter}>{finQuizz === false ? "Score : " + score : 'Quizz terminé ! Résultat : ' + score + '/' + (totalQuestions * 10)}</Text><View>
-                    <Text style={styles.question}>
-                        {index === data.length ? undefined : '(' + (index + 1) + '/' + totalQuestions + ') ' + currentQuestion?.question}
-                    </Text>
+            {quizzStatus === false && finQuizz === false ?
+                <>
+                    <SelectDropdown data={theme} onSelect={(selectedItem, index) => { setTheme(selectedItem) }}
+                        buttonTextAfterSelection={(selectedItem, index) => { return selectedItem }}
+                        rowTextForSelection={(item, index) => { return item }}
+                        dropdownStyle={styles.dropdown} buttonStyle={styles.select} />
+                    
+                    <Button title="Démarrer" onPress={() => setQuizzStatus(true)}></Button>
+                </> :
+                <>
+                    <Text style={styles.timer}>TIMER: {countdown}s</Text>
+                    <Text style={styles.counter}>{finQuizz === false ? ("Score : " + score) : ('Quizz terminé ! Résultat : ' + score + '/' + (totalQuestions * 10))}</Text>
 
-                    <View style={{ marginTop: 10 }}>
-                        {currentQuestion?.choices.map((item, index) => (
+                    <View>
+                        <Text style={styles.question}>
+                            {index === data.length ? undefined : '(' + (index + 1) + '/' + totalQuestions + ') ' + currentQuestion?.question}
+                        </Text>
+
+                        <View style={{ marginTop: 10 }}>
+                            {currentQuestion?.choices.map((item, index) => (
 
                             <TouchableOpacity key={index} onPress={() => setSelectedAnswer(item.id)} style={{ borderColor: "red", padding: 10 }}>
                                 <View style={styles.cards}>
@@ -126,10 +147,9 @@ export default function QuizzScreen() {
                                 </View>
                             </TouchableOpacity>
 
-                        ))}
+                            ))}
+                        </View>
                     </View>
-
-                </View>
                 </>
             }
 
@@ -180,5 +200,15 @@ const styles = StyleSheet.create({
         padding: 5,
         marginBottom: 10,
         paddingLeft: 10
-  }
+    },
+    select: {
+        maxWidth: 200,
+        maxHeight: 100,
+        borderColor: "black",
+        borderWidth: 1,
+        padding: 0
+    },
+    dropdown: {
+        maxHeight: 50,
+    }
 });

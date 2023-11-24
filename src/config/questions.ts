@@ -1,8 +1,9 @@
 /* Structure JSON typique qui va contenir les questions (temporairement) */
 
 // Questions Naruto
-export const questionsNaruto = {
-    questions: [
+export const questions = {
+    // Questions Naruto
+    naruto: [
         {
             index: 0,
             question: "Lequel des ces personnages est le 1er Hokage?",
@@ -233,13 +234,9 @@ export const questionsNaruto = {
             ],
             answerId: 4
         }
-    ]
-}
-
-
-// Questions DBZ
-export const questionsDbz = {
-    questions: [
+    ],
+    // Question DBZ
+    dragonball: [
         {
             index: 0,
             question: "Quelle est la date de parution du premier chapitre de la série?",
@@ -269,7 +266,7 @@ export const questionsDbz = {
             choices: [
                 {
                     id: 1,
-                    answer: "Leur intelligence extrêmement faible",
+                    answer: "Leur QI d'Huître",
                 },
                 {
                     id: 2,
