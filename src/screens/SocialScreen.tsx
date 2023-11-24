@@ -7,7 +7,7 @@ export default function SocialScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE", paddingTop: height / 14 }}>
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
         <View style={styles.container}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Inviter un ami</Text>
@@ -119,10 +119,10 @@ const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-around",
     width: "80%",
     backgroundColor: "#DBE9EE",
-    marginBottom: 50,
+    marginTop: 50,
   },
   containerModal: {
     flexDirection: "row",

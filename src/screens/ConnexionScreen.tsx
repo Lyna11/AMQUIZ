@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
-import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword, getAuth, fetchSignInMethodsForEmail,initializeAuth,getReactNativePersistence } from "firebase/auth";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { REACT_APP_FIREBASE_API_KEY, AUTHDOMAIN, PROJECTID, STORAGEBUCKET, MESSAGINGSENDERID, APPID } from '@env';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { initializeApp } from "firebase/app";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, fetchSignInMethodsForEmail, initializeAuth, getReactNativePersistence } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { REACT_APP_FIREBASE_API_KEY, AUTHDOMAIN, PROJECTID, STORAGEBUCKET, MESSAGINGSENDERID, APPID } from "@env";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
   // Votre configuration Firebase
@@ -14,55 +14,53 @@ const firebaseConfig = {
   storageBucket: STORAGEBUCKET,
   messagingSenderId: MESSAGINGSENDERID,
   appId: APPID,
-  measurementId: ""
+  measurementId: "",
 };
 const app = initializeApp(firebaseConfig);
 //const auth = getAuth();
 const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
-const ConnexionScreen= ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+const ConnexionScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
 
   useEffect(() => {
     checkSession();
   }, []);
 
-
   const checkSession = async () => {
     try {
-      const user = await AsyncStorage.getItem('user');
+      const user = await AsyncStorage.getItem("user");
       if (user) {
         const savedEmail = JSON.parse(user).email;
-        const emailParts = savedEmail.split('@');
+        const emailParts = savedEmail.split("@");
         const username = emailParts[0];
         setUsername(username);
-        navigation.navigate('Menu', { screen:'Profile' , params:{username} });
+        navigation.navigate("Menu", { screen: "Profile", params: { username } });
       }
     } catch (error) {
-      console.log('Error checking session:', error);
+      console.log("Error checking session:", error);
     }
   };
   const saveSession = async (user) => {
     try {
-      await AsyncStorage.setItem('user', JSON.stringify(user));
-      console.log('Session saved successfully');
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      console.log("Session saved successfully");
     } catch (error) {
-      console.log('Error saving session:', error);
+      console.log("Error saving session:", error);
     }
   };
   const clearSession = async () => {
     try {
-      await AsyncStorage.removeItem('user');
-      console.log('Session cleared successfully');
+      await AsyncStorage.removeItem("user");
+      console.log("Session cleared successfully");
     } catch (error) {
-      console.log('Error clearing session:', error);
+      console.log("Error clearing session:", error);
     }
   };
 
@@ -70,25 +68,24 @@ const ConnexionScreen= ({ navigation }) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        const emailParts = email.split('@');
+        const emailParts = email.split("@");
         const username = emailParts[0];
         setUsername(username);
         setIsLoggedIn(true);
         saveSession(user);
-        navigation.navigate('Menu', { screen:'Profile' , params:{username} });
-
+        navigation.navigate("Menu", { screen: "Profile", params: { username } });
       })
       .catch((error) => {
         const errorCode = error.code;
-        let errorMessage = '';
-        if (errorCode === 'auth/invalid-email') {
-          errorMessage = 'Adresse e-mail invalide.';
-        } else if (errorCode === 'auth/wrong-password') {
-          errorMessage = 'Mot de passe incorrect.';
-        } else if (errorCode === 'auth/user-not-found') {
+        let errorMessage = "";
+        if (errorCode === "auth/invalid-email") {
+          errorMessage = "Adresse e-mail invalide.";
+        } else if (errorCode === "auth/wrong-password") {
+          errorMessage = "Mot de passe incorrect.";
+        } else if (errorCode === "auth/user-not-found") {
           errorMessage = "L'utilisateur n'existe pas.";
         } else {
-          errorMessage = 'Erreur lors de la connexion.';
+          errorMessage = "Erreur lors de la connexion.";
         }
         setErrorMessage(errorMessage);
       });
@@ -100,60 +97,38 @@ const ConnexionScreen= ({ navigation }) => {
         const user = userCredential.user;
         setUsername(user.displayName);
         saveSession(user);
-        navigation.navigate('Menu');
+        navigation.navigate("Menu");
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   };
 
-
-
-
-
   return (
-
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
-      
+      <View style={styles.container}>
+        <Text style={styles.title}>Quiz animés/mangas</Text>
 
+        <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail} value={email} />
 
+        <TextInput style={styles.input} placeholder="Mot de passe" onChangeText={setPassword} value={password} secureTextEntry />
 
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Se connecter</Text>
+        </TouchableOpacity>
 
-          <Text style={styles.title}>Quiz animés/mangas</Text>
+        <Text style={styles.underscore}>Mot de passe oublié ?</Text>
 
-          <TextInput 
-          style={styles.input} 
-          placeholder="Email" 
-          onChangeText={setEmail}
-          value={email}/>
-
-          <TextInput 
-          style={styles.input} 
-          placeholder="Mot de passe"
-          onChangeText={setPassword}
-          value={password}
-          secureTextEntry
-           />
-
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Se connecter</Text>
+        <View style={styles.noAccount}>
+          <Text style={styles.greenText}>Pas de compte ?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Inscription")}>
+            <Text style={styles.underscore}>S'inscrire</Text>
           </TouchableOpacity>
-
-          <Text style={styles.underscore}>Mot de passe oublié ?</Text>
-
-          <View style={styles.noAccount}>
-            <Text style={styles.greenText}>Pas de compte ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Inscription')} >
-              <Text style={styles.underscore}>S'inscrire</Text>
-            </TouchableOpacity>
-          </View>
-
         </View>
-            
+      </View>
 
-          <Text style={styles.errorMessage}>{errorMessage}</Text>
+      <Text style={styles.errorMessage}>{errorMessage}</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -208,10 +183,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   errorMessage: {
-    color: 'red',
-    marginTop:  -100,
+    color: "red",
+    marginTop: -100,
   },
 });
 
 export default ConnexionScreen;
-
