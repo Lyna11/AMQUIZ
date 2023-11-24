@@ -1,78 +1,29 @@
-import * as React from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+// App.js
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import ConnexionScreen from "./src/screens/ConnexionScreen";
-import HomeScreen from "./src/screens/HomeScreen";
-import BoutiqueScreen from "./src/screens/ShopScreen";
-import OuvertureScreen from "./src/screens/UnboxingScreen";
-import AmisScreen from "./src/screens/SocialScreen";
-import ProfilScreen from "./src/screens/ProfileScreen";
+import ConnexionScreen from './src/screens/ConnexionScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import MenuScreen from './src/screens/MenuScreen';
+import InscriptionScreen from './src/screens/InscriptionScreen';
 
-const Tab = createBottomTabNavigator();
+import ShopScreen from './src/screens/ShopScreen'
 
-/* VRAI APP A CONSERVER */
-export default function App() {
+
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <NavigationContainer>
-      <Tab.Navigator initialRouteName="Feed" screenOptions={{ tabBarActiveTintColor: "#e91e63" }}>
-        <Tab.Screen
-          name="Shop"
-          component={BoutiqueScreen}
-          options={{
-            tabBarLabel: "Shop",
-            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="shopping" color={color} size={size} />,
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
-          name="Unboxing"
-          component={OuvertureScreen}
-          options={{
-            tabBarLabel: "Unboxing",
-            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="treasure-chest" color={color} size={size} />,
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            tabBarLabel: "Home",
-            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="home" color={color} size={size} />,
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
-          name="Social"
-          component={AmisScreen}
-          options={{
-            tabBarLabel: "Social",
-            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account-multiple-plus" color={color} size={size} />,
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={ProfilScreen}
-          options={{
-            tabBarLabel: "Profile",
-            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account" color={color} size={size} />,
-            headerShown: false,
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-}
+      <NavigationContainer>
+        <Stack.Navigator >
+          <Stack.Screen name="Connexion" component={ConnexionScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Menu" component={MenuScreen} options={{ headerShown: false, gestureEnabled: false }}  />
+          <Stack.Screen name="Inscription" component={InscriptionScreen} options={{ headerShown: false }}  />
+        </Stack.Navigator>
+      </NavigationContainer>
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+  );
+};
+
+export default App;
