@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Pressable } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 
 import { questions } from '../config/questions';
@@ -134,9 +134,9 @@ export default function QuizzScreen() {
                     <SelectDropdown data={theme} onSelect={(selectedItem, index) => { setTheme(selectedItem) }}
                         buttonTextAfterSelection={(selectedItem, index) => { return selectedItem }}
                         rowTextForSelection={(item, index) => { return item }}
-                        dropdownStyle={styles.dropdown} buttonStyle={styles.select} />
+                        buttonStyle={styles.select} />
                     
-                    <Button title="Démarrer" onPress={() => setQuizzStatus(true)}></Button>
+                    <Pressable style={styles.start} onPress={() => setQuizzStatus(true)}>Démarrer</Pressable>
                 </> :
                 <>
                     <Text style={styles.timer}>TIMER: {countdown}s</Text>
@@ -221,7 +221,17 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 0
     },
-    dropdown: {
+    start: {
+        maxWidth: 100,
         maxHeight: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 22,
+        borderRadius: 5,
+        elevation: 3,
+        backgroundColor: '#e91e63',
+        color: "white",
+        fontSize: 18
     }
 });
