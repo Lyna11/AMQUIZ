@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal, BackHandler } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Deconnexion from "../components/Deconnexion";
 const HomeScreen = ({ navigation, route }) => {
+  useEffect(() => {
+    const backAction = () => {
+      // Bloquer le bouton de retour
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+    // Nettoyer l'effet lors du démontage de l'écran
+    return () => backHandler.remove();
+  }, []); // Assurez-vous
   const [username, setUsername] = useState("");
   useEffect(() => {
     checkSession();
@@ -118,7 +129,7 @@ const HomeScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity style={styles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.buttonText}>Fermer</Text>
           </TouchableOpacity>
         </View>

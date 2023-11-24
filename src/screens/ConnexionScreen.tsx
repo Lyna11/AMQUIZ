@@ -41,7 +41,7 @@ const ConnexionScreen = ({ navigation }) => {
         const emailParts = savedEmail.split("@");
         const username = emailParts[0];
         setUsername(username);
-        navigation.navigate("Menu", { screen: "Home" });
+        navigation.navigate("Menu", { screen: "Profile", params: { username } });
       }
     } catch (error) {
       console.log("Error checking session:", error);
@@ -73,8 +73,7 @@ const ConnexionScreen = ({ navigation }) => {
         setUsername(username);
         setIsLoggedIn(true);
         saveSession(user);
-        navigation.navigate("Menu", { screen: "Home", params: { username } });
-        // navigation.navigate("Menu", { screen: "Home", params: { username } });
+        navigation.navigate("Menu", { screen: "Profile", params: { username } });
       })
       .catch((error) => {
         const errorCode = error.code;

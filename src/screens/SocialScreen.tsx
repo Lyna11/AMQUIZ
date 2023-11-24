@@ -106,8 +106,8 @@ export default function SocialScreen() {
               <Text style={styles.buttonText}>R</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
-            <Text style={styles.buttonText}>Fermer</Text>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={styles.buttonTextClose}>Fermer</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -156,17 +156,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 32,
   },
-  buttonClose: {
-    backgroundColor: "#4F6D7A",
-    padding: 12,
-    borderRadius: 100,
-    marginTop: 16,
-  },
   buttonText: {
     color: "white",
     fontSize: 22,
     textAlign: "center",
     fontWeight: "900",
+  },
+  buttonTextClose: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000000",
+    textAlign: "center",
   },
   cards: {
     display: "flex",
