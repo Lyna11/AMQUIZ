@@ -1,11 +1,13 @@
 import * as React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, SafeAreaView, useWindowDimensions } from "react-native";
 import RoundedSquare from "../components/square";
+
 export default function BoutiqueScreen() {
+  const { width, height } = useWindowDimensions();
   // Rendu
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.container}>
         <Title_ text="COFFRES" />
         <View style={styles.line}>
           <RoundedSquare montant="2000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>
@@ -37,17 +39,24 @@ export const Title_: React.FC<TitleProps> = ({ text }) => (
 
 /* Pour CSS */
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "#DBE9EE",
+    height: "100%",
+    justifyContent: "space-around",
+  },
   line: {
-    flex: 1,
     flexDirection: "row", // Aligner les carrés horizontalement
-    justifyContent: "space-between", // Espace équitable entre les carrés
-    paddingHorizontal: 16, // Espace intérieur horizontal pour améliorer la lisibilité
+    flexWrap: "wrap", // Retour à la ligne si besoin
+    justifyContent: "center", // Centrer les carrés horizontalement
+    alignItems: "center", // Centrer les carrés verticalement
+    marginVertical: 30,
   },
   titleBarContainer: {
     backgroundColor: "#4F6D7A",
     paddingVertical: 8,
     alignSelf: "stretch",
-    marginTop: 20,
   },
   titleContent: {
     flexDirection: "row",

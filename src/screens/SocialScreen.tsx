@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView, Image, Modal, ScrollView, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, SafeAreaView, Image, Modal, ScrollView, useWindowDimensions, Dimensions } from "react-native";
 
 export default function SocialScreen() {
   const [modalVisible, setModalVisible] = useState(false);
+  const { width, height } = useWindowDimensions();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE", paddingTop: height / 14 }}>
         <View style={styles.container}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Inviter un ami</Text>
@@ -121,7 +122,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "80%",
     backgroundColor: "#DBE9EE",
-    paddingTop: screenHeight / 10,
     marginBottom: 50,
   },
   containerModal: {
