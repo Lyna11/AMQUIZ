@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Pressable } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Deconnexion from "../components/Deconnexion";
 const HomeScreen = ({ navigation, route }) => {
+  const [username, setUsername] = useState("");
+  useEffect(() => {
+    checkSession();
+  }, []);
+
+  const checkSession = async () => {
+    try {
+      const user = await AsyncStorage.getItem("user");
+      if (user) {
+        const savedEmail = JSON.parse(user).email;
+        const emailParts = savedEmail.split("@");
+        const username = emailParts[0];
+        setUsername(username);
+      }
+    } catch (error) {
+      console.log("Error checking session:", error);
+    }
+  };
   const { params } = route;
-  const username = params.username;
+  const usernameSave = username;
   // Sample list of image URLs
   const imageList = [
     "https://images.unsplash.com/photo-1615592389070-bcc97e05ad01?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -34,7 +50,7 @@ const HomeScreen = ({ navigation, route }) => {
           {/* Photo de profil */}
           <View style={styles.blocProfil}>
             <View style={styles.blocProfilRight}>
-              <Text style={styles.playerNameText}>{`${username}`}</Text>
+              <Text style={styles.playerNameText}>{`${usernameSave}`}</Text>
               <Text style={styles.playerDescriptionText}>{"Petite description"}</Text>
             </View>
             <Image
@@ -63,7 +79,7 @@ const HomeScreen = ({ navigation, route }) => {
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QuizScreen")}>
               <Text style={styles.text}>Jouer</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
