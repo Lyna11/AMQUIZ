@@ -131,9 +131,9 @@ export default function QuizzScreen() {
 
             {quizzStatus === false && finQuizz === false ?
                 <>
-                    <SelectDropdown data={theme} onSelect={(selectedItem, index) => { setTheme(selectedItem) }}
-                        buttonTextAfterSelection={(selectedItem, index) => { return selectedItem }}
-                        rowTextForSelection={(item, index) => { return item }}
+                    <SelectDropdown data={theme} onSelect={(selectedItem: any, index: any) => { setTheme(selectedItem) }}
+                        buttonTextAfterSelection={(selectedItem: any, index: any) => { return selectedItem }}
+                        rowTextForSelection={(item: any, index: any) => { return item }}
                         buttonStyle={styles.select} />
                     
                     <Pressable style={styles.start} onPress={() => setQuizzStatus(true)}>Démarrer</Pressable>
