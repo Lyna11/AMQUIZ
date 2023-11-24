@@ -1,9 +1,12 @@
-import * as React from "react";
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Pressable } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
-export default function HomeScreen() {
+import Deconnexion from "../components/Deconnexion";
+const HomeScreen = ({ navigation, route }) => {
+  const { params } = route;
+  const username = params.username;
   // Sample list of image URLs
   const imageList = [
     "https://images.unsplash.com/photo-1615592389070-bcc97e05ad01?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -15,15 +18,23 @@ export default function HomeScreen() {
   ];
 
   const renderImageItem = ({ item }) => <Image source={{ uri: item }} style={styles.image} />;
-
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
         <View style={styles.container}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Image
+              source={{
+                uri: "https://img.icons8.com/color/48/settings--v1.png",
+              }}
+              style={styles.iconeSettings}
+            />
+          </TouchableOpacity>
           {/* Photo de profil */}
           <View style={styles.blocProfil}>
             <View style={styles.blocProfilRight}>
-              <Text style={styles.playerNameText}>{"Pseudo"}</Text>
+              <Text style={styles.playerNameText}>{`${username}`}</Text>
               <Text style={styles.playerDescriptionText}>{"Petite description"}</Text>
             </View>
             <Image
@@ -61,24 +72,65 @@ export default function HomeScreen() {
           </View>
         </View>
       </View>
+      <Modal
+        style={{ display: "flex", justifyContent: "center", alignItems: "center", borderColor: "black", borderWidth: 2 }}
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.modal}>
+          <Text style={{ fontSize: 26, fontWeight: "bold" }}>PARAMETRE</Text>
+          <View style={styles.containerModal}>
+            <View style={styles.verticalButtonsContainer}>
+              <TouchableOpacity style={styles.buttonModal}>
+                <Text style={styles.buttonText}>Son</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonModal}>
+                <Text style={styles.buttonText}>Conditions d'utilisation</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Nouvelle structure pour les boutons horizontaux */}
+            <View style={styles.horizontalButtonsContainer}>
+              <TouchableOpacity style={styles.horizontalButton}>
+                <Deconnexion navigation={navigation} closeModal={() => setModalVisible(!modalVisible)} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.horizontalButton}>
+                <Text style={styles.buttonText}>Supprimer mon compte</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={styles.buttonText}>Fermer</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     justifyContent: "space-around",
-    width: "80%",
+    width: "90%",
     backgroundColor: "#DBE9EE",
     marginTop: 50,
   },
+  iconeSettings: {
+    width: 30,
+    height: 30,
+    alignSelf: "flex-start",
+  },
+
   blocProfil: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#DBE9EE",
-    paddingTop: 40,
+    paddingTop: 10,
   },
   blocProfilRight: {
     flexDirection: "column",
@@ -157,4 +209,64 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFFFFF",
   },
+
+  modal: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: "50%",
+    margin: 20,
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: "black",
+    elevation: 20,
+  },
+
+  buttonModal: {
+    width: 200,
+    paddingVertical: 30,
+    borderRadius: 8,
+    backgroundColor: "#C0D6DF",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+
+  containerModal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    flexWrap: "wrap",
+    backgroundColor: "white",
+    borderRadius: 12,
+    paddingVertical: 20,
+  },
+
+  // Styles pour les boutons horizontaux
+  verticalButtonsContainer: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+  },
+  // Styles pour les boutons horizontaux
+  horizontalButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%", // La largeur est définie à 100% de l'écran
+    marginTop: 50,
+  },
+  horizontalButton: {
+    backgroundColor: "#C0D6DF",
+    paddingVertical: 15,
+    borderRadius: 10,
+    width: "45%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000000",
+    textAlign: "center",
+  },
 });
+export default HomeScreen;
