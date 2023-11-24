@@ -8,9 +8,9 @@ import { questions } from '../config/questions';
 export default function QuizzScreen() {
 
     // Données questions.ts
-    const [data, setData] = useState(questions.naruto); // choix par défaut obligé
-    const totalQuestions = data.length;
-    const theme = ["Naruto", "DragonBall"]; // liste des thèmes
+    const [data, setData] = useState(questions.naruto); // choix par défaut
+    const totalQuestions = data.length; // compteur questions
+    const theme = ["Naruto", "DragonBall", 'Evangelion']; // liste des thèmes
     // Index questions
     const [index, setIndex] = useState(0);
     // Question actuelle
@@ -27,13 +27,26 @@ export default function QuizzScreen() {
     // Booléen fin du quizz
     const [finQuizz, setFinQuizz] = useState(false);
 
+    /*************************************************************************************************************************/
+    
     // Gestion du choix de thème
     function setTheme(item: string) {
-        if (item === "Naruto") {
-            setData(questions.naruto);
-        }
-        if (item === "DragonBall") {
-            setData(questions.dragonball);
+        switch (item) {
+            case "Naruto": {
+                setData(questions.naruto);
+                break;
+            }
+            case "DragonBall": {
+                setData(questions.dragonball);
+                break;
+            }
+            case "Evangelion": {
+                setData(questions.evangelion);
+                break;
+            }
+            default: {
+                return;
+            }
         }
     }
 
@@ -107,7 +120,7 @@ export default function QuizzScreen() {
         }
     }, [selectedAnswer]);
 
-    /****************************************************************/
+    /*************************************************************************************************************************/
 
     // Rendu
     return (

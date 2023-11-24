@@ -467,5 +467,237 @@ export const questions = {
             ],
             answerId: 1
         }
+    ],
+    evangelion: [
+        {
+            index: 0,
+            question: "Quelle est l'unité que pilote Shinji?'",
+            choices: [
+                {
+                    id: 1,
+                    answer: "EVA-02",
+                },
+                {
+                    id: 2,
+                    answer: "EVA-69",
+                },
+                {
+                    id: 3,
+                    answer: "Le Farenheit",
+                },
+                {
+                    id: 4,
+                    answer: "EVA-01",
+                }
+            ],
+            answerId: 4
+        },
+        {
+            index: 1,
+            question: "Combien de pilotes différents sont présent dans la série originale?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "5",
+                },
+                {
+                    id: 2,
+                    answer: "1",
+                },
+                {
+                    id: 3,
+                    answer: "3",
+                },
+                {
+                    id: 4,
+                    answer: "7",
+                } 
+            ],
+            answerId: 1
+        },
+        {
+            index: 2,
+            question: "De quelle sentiment la série originale est une représentation pour l'auteur?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "Sa bêtise",
+                },
+                {
+                    id: 2,
+                    answer: "Sa haine",
+                },
+                {
+                    id: 3,
+                    answer: "Sa dépression",
+                },
+                {
+                    id: 4,
+                    answer: "Son excitation",
+                }
+            ],
+            answerId: 3
+        },
+        {
+            index: 3,
+            question: "De combien de films les remakes sont-ils composés?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "2",
+                },
+                {
+                    id: 2,
+                    answer: "4",
+                },
+                {
+                    id: 3,
+                    answer: "3",
+                },
+                {
+                    id: 4,
+                    answer: "5",
+                }
+            ],
+            answerId: 2
+        },
+        {
+            index: 4,
+            question: "'End of Evangelion' est-il...",
+            choices: [
+                {
+                    id: 1,
+                    answer: "Une suite à la série",
+                },
+                {
+                    id: 2,
+                    answer: "Un reboot",
+                },
+                {
+                    id: 3,
+                    answer: "La fin de la série",
+                },
+                {
+                    id: 4,
+                    answer: "Une parodie",
+                }
+            ],
+            answerId: 3
+        },
+        {
+            index: 5,
+            question: "Quel dilemme social tient une place centrale dans l'oeuvre?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "La guerre en Irak",
+                },
+                {
+                    id: 2,
+                    answer: "Le dilemme des rails",
+                },
+                {
+                    id: 3,
+                    answer: "Le paradoxe du Hérisson",
+                },
+                {
+                    id: 4,
+                    answer: "La peur des autres",
+                }
+            ],
+            answerId: 3
+        },
+        {
+            index: 6,
+            question: "Qui est le premier pilote de l'unité EVA-01?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "Jean-Claude Van Damne",
+                },
+                {
+                    id: 2,
+                    answer: "Le père de Shinji",
+                },
+                {
+                    id: 3,
+                    answer: "Asuka",
+                },
+                {
+                    id: 4,
+                    answer: "La mère de Shinji",
+                }
+            ],
+            answerId: 4
+        },
+        {
+            index: 7,
+            question: "Quel est l'évènement cataclysmique à l'origine du contexte de la série?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "Le second impact",
+                },
+                {
+                    id: 2,
+                    answer: "Le premier impact",
+                },
+                {
+                    id: 3,
+                    answer: "Le 11 Septembre",
+                },
+                {
+                    id: 4,
+                    answer: "L'inversion des pôles",
+                }
+            ],
+            answerId: 1
+        },
+        {
+            index: 8,
+            question: "Shinji Ikari est un personnage ayant...",
+            choices: [
+                {
+                    id: 1,
+                    answer: "Des problèmes d'identité",
+                },
+                {
+                    id: 2,
+                    answer: "Des problèmes d'érections",
+                },
+                {
+                    id: 3,
+                    answer: "Des problèmes avec son père",
+                },
+                {
+                    id: 4,
+                    answer: "Aucun problème, 0 soucis",
+                }
+            ],
+            answerId: 3
+        },
+        {
+            index: 9,
+            question: "Quel est le nom de l'auteur d'Evangelion?",
+            choices: [
+                {
+                    id: 1,
+                    answer: "Yuji Toriyamo",
+                },
+                {
+                    id: 2,
+                    answer: "Hideaki Anno",
+                },
+                {
+                    id: 3,
+                    answer: "Anon The Third",
+                },
+                {
+                    id: 4,
+                    answer: "Marc Levy",
+                }
+            ],
+            answerId: 2
+        }
     ]
 }
