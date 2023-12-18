@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { QuizzModel } from '../quizz/quizz.interface';
+import { Questions } from '../questions/questions.interface';
 
 @Injectable()
 export class QuizzService {
@@ -7,7 +9,14 @@ export class QuizzService {
 
   // Récupère toutes les instances de quizz
   public findAll(): Array<QuizzModel> {
-    return this.quizzs;
+    // const temporaire pour test
+    const testQuizz: QuizzModel = {
+      id: 417,
+      questions: {},
+      players: [],
+    };
+
+    return [testQuizz, ...this.quizzs];
   }
 
   // Récupère un quizz par son ID
@@ -33,5 +42,21 @@ export class QuizzService {
     // Ajout du quizz créér au quizzs existants
     this.quizzs.push(newQuizz);
     return newQuizz;
+  }
+
+  // Modifie un quizz existant
+  public update(id: number, quizz: QuizzModel): QuizzModel {
+    const index: number = this.quizzs.findIndex((quizz) => quizz.id === id);
+
+    // Pas de quizz correspondant
+    if (index === -1) {
+      throw new NotFoundException('Quizz introuvable');
+    }
+    const quizzUpdate: QuizzModel = {
+      ...quizz,
+      id,
+    };
+
+    return quizz;
   }
 }
