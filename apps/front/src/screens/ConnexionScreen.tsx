@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, fetchSignInMethodsForEmail, initializeAuth, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, fetchSignInMethodsForEmail, initializeAuth, User, getReactNativePersistence } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { REACT_APP_FIREBASE_API_KEY, AUTHDOMAIN, PROJECTID, STORAGEBUCKET, MESSAGINGSENDERID, APPID } from "@env";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,8 +19,9 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 //const auth = getAuth();
-const auth = initializeAuth(app);
-
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 const ConnexionScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");

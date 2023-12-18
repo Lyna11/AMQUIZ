@@ -46,6 +46,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const renderImageItem = ({ item }) => <Image source={{ uri: item }} style={styles.image} />;
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleDeco, setModalVisibleDeco] = useState(false);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
@@ -124,7 +125,7 @@ const HomeScreen = ({ navigation, route }) => {
               <TouchableOpacity style={styles.horizontalButton}>
                 <Deconnexion navigation={navigation} closeModal={() => setModalVisible(!modalVisible)} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.horizontalButton}>
+              <TouchableOpacity style={styles.horizontalButton} onPress={() => setModalVisibleDeco(true)}>
                 <Text style={styles.buttonText}>Supprimer mon compte</Text>
               </TouchableOpacity>
             </View>
@@ -132,6 +133,29 @@ const HomeScreen = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.buttonText}>Fermer</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        style={{ display: "flex", justifyContent: "center", alignItems: "center", borderColor: "black", borderWidth: 2 }}
+        animationType="slide"
+        transparent={true}
+        visible={modalVisibleDeco}
+        onRequestClose={() => {
+          setModalVisibleDeco(!modalVisibleDeco);
+        }}>
+        <View style={styles.modal}>
+          <Text style={{ fontSize: 26, fontWeight: "bold", textAlign: "center" }}>VOULEZ-VOUS VRAIMENT SUPRIMER VOTRE COMPTE ?</Text>
+          <View style={styles.containerModal}>
+            {/* Nouvelle structure pour les boutons horizontaux */}
+            <View style={styles.horizontalButtonsContainer}>
+              <TouchableOpacity style={styles.horizontalButton}>
+                <Text style={styles.buttonText}>Oui</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.horizontalButton} onPress={() => setModalVisibleDeco(!modalVisibleDeco)}>
+                <Text style={styles.buttonText}>Non</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
