@@ -167,6 +167,7 @@ const styles = StyleSheet.create({
   /* TODO */
   container: {
     width:'100%',
+    marginTop:50,
   },
 
   skillContainer: {

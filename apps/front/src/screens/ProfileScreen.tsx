@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, FlatList, Dimensions} from 'react-native';
 import ProfileImgSelector from '../components/ProfileImgSelector';
 import ProfileUserInfos from '../components/ProfileUserInfos';
 import ProfileUserEdit from '../components/ProfileUserEdit';
+import { useQuery } from 'react-query';
+import { getQuizz } from '../api/endpoints';
 
 export default function ProfilScreen() {
 
   const [active, setActive] = useState(0);
+
+  const { isLoading, error, data } = useQuery('quizz', getQuizz);
+
+  console.log('DATA', data);
+
 
   // Rendu
   return (
@@ -50,7 +57,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     width: '80%',
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    marginTop: 50,
+    marginBottom: 50
   },
 
   userProfilePicSkills: {

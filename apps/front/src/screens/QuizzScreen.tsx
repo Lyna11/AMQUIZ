@@ -27,6 +27,7 @@ export default function QuizzScreen() {
     // Booléen fin du quizz
     const [finQuizz, setFinQuizz] = useState(false);
 
+
     /*************************************************************************************************************************/
     
     // Gestion du choix de thème
