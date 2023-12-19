@@ -5,7 +5,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import { questions } from "../config/questions";
 
 // Ecran de Quizz
-export default function QuizScreen({ navigation, route }) {
+export default function QuizScreen({ navigation, route }: any) {
   // Récupération du thème choisi
   const { params } = route;
   const nomDuQuizz = params?.theme;
@@ -107,153 +107,156 @@ export default function QuizScreen({ navigation, route }) {
       }
     }
 
-    // Utilisation de setTimeout pour déclencher le passage à la question suivante après 1 seconde
-    const timeout = setTimeout(goToNextQuestion, 1000);
+    // Appeler directement la fonction pour passer à la question suivante
+    goToNextQuestion();
 
     // Nettoyage timeout
-    return () => {
-      if (timeout) clearTimeout(timeout);
-    };
+    return () => {};
   }, [selectedAnswer, currentQuestion]);
 
   /*************************************************************************************************************************/
 
   // Rendu
   return (
-    <SafeAreaView>
-      <Text style={styles.title}>{`Quiz ${nomDuQuizz} !`}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
+        <View style={styles.container}>
+          <Text style={styles.title}>{`Quiz ${nomDuQuizz} !`}</Text>
 
-      {quizzStatus === false && finQuizz === false ? (
-        <>
-          <Pressable
-            style={styles.startButton}
-            onPress={() => {
-              setQuizzStatus(true);
-              setTheme(nomDuQuizz);
-            }}>
-            <Text>Démarrer</Text>
-          </Pressable>
-          <TouchableOpacity
-            style={styles.finishButton}
-            onPress={() => {
-              setQuizzStatus(false);
-              setIndex(0);
-              setScore(0);
-              setCountdown(7);
-              setFinQuizz(false);
-              navigation.navigate("QuizScreen");
-            }}>
-            <Text>Revenir</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <Text style={styles.counter}>{`Quizz terminé ! Résultat : ${score}/${totalQuestions * 10}`}</Text>
-          {finQuizz ? (
-            // Afficher le bouton FIN à la fin du quiz
-            <TouchableOpacity
-              style={styles.finishButton}
-              onPress={() => {
-                setQuizzStatus(false);
-                setIndex(0);
-                setScore(0);
-                setCountdown(7);
-                setFinQuizz(false);
-                navigation.navigate("QuizScreen");
-              }}>
-              <Text>FIN</Text>
-            </TouchableOpacity>
-          ) : (
-            // Afficher le contenu du quiz lorsqu'il est en cours
+          {quizzStatus === false && finQuizz === false ? (
             <>
-              <Text style={styles.timer}>TIMER: {countdown}s</Text>
-              <Text style={styles.counter}>{finQuizz === false ? "Score : " + score : "Quizz terminé ! Résultat : " + score + "/" + totalQuestions * 10}</Text>
+              <Pressable
+                style={styles.startButton}
+                onPress={() => {
+                  setQuizzStatus(true);
+                  setTheme(nomDuQuizz);
+                }}>
+                <Text style={styles.buttonText}>Démarrer</Text>
+              </Pressable>
+              <TouchableOpacity
+                style={styles.finishButton}
+                onPress={() => {
+                  setQuizzStatus(false);
+                  setIndex(0);
+                  setScore(0);
+                  setCountdown(7);
+                  setFinQuizz(false);
+                  navigation.navigate("QuizScreen");
+                }}>
+                <Text style={styles.buttonText}>Revenir</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              {finQuizz ? (
+                // Afficher le bouton FIN à la fin du quiz
+                <TouchableOpacity
+                  style={styles.finishButton}
+                  onPress={() => {
+                    setQuizzStatus(false);
+                    setIndex(0);
+                    setScore(0);
+                    setCountdown(7);
+                    setFinQuizz(false);
+                    navigation.navigate("QuizScreen");
+                  }}>
+                  <Text style={styles.counter}>{`Quizz terminé! Résultat : ${score}/${totalQuestions * 10}`}</Text>
+                  <Text>FIN</Text>
+                </TouchableOpacity>
+              ) : (
+                // Afficher le contenu du quiz lorsqu'il est en cours
+                <>
+                  <Text style={styles.timer}>TIMER: {countdown}s</Text>
+                  <Text style={styles.counter}>{`Score : ${score}`}</Text>
+                  <View>
+                    <Text style={styles.question}>{index === data.length ? undefined : "(" + (index + 1) + "/" + totalQuestions + ") " + currentQuestion?.question}</Text>
 
-              <View>
-                <Text style={styles.question}>{index === data.length ? undefined : "(" + (index + 1) + "/" + totalQuestions + ") " + currentQuestion?.question}</Text>
-
-                <View style={{ marginTop: 10 }}>
-                  {currentQuestion?.choices.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={() => setSelectedAnswer(item.id)} style={{ borderColor: "red", padding: 10 }}>
-                      <View style={styles.cards}>
-                        <Text style={{ color: selectedAnswer === item.id ? (selectedAnswer === currentQuestion.answerId ? "green" : "red") : undefined }}>
-                          {item.id} - {item.answer}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
+                    <View style={{ marginTop: 10 }}>
+                      {currentQuestion?.choices.map((item, index) => (
+                        <TouchableOpacity key={index} onPress={() => setSelectedAnswer(item.id)} style={{ borderColor: "red", padding: 10 }}>
+                          <View style={styles.cards}>
+                            <Text style={{ color: selectedAnswer === item.id ? (selectedAnswer === currentQuestion.answerId ? "green" : "red") : undefined }}>
+                              {item.id} - {item.answer}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+                </>
+              )}
             </>
           )}
-        </>
-      )}
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
 
 /* Pour CSS */
 const styles = StyleSheet.create({
-  title: {
-    fontWeight: "bold",
-    fontSize: 30,
-    color: "#e91e63",
-    padding: 10,
-  },
-  question: {
-    fontWeight: "bold",
-    fontSize: 18,
-    padding: 5,
-    margin: 0,
-  },
-  cards: {
-    color: "black",
-    display: "flex",
-    flexDirection: "row",
+  container: {
+    flex: 1,
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "black",
-    borderRadius: 20,
-    padding: 5,
-    maxWidth: 250,
-    textShadowRadius: 1,
-    textShadowColor: "black",
+    backgroundColor: "#DBE9EE",
+    width: "90%",
+    marginTop: "25%",
   },
-  counter: {
-    color: "white",
-    backgroundColor: "#e91e63",
-    padding: 10,
-    fontSize: 16,
+  title: {
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 10,
-  },
-  timer: {
-    fontSize: 18,
-    color: "#6A5ACD",
-    fontWeight: "bold",
-    padding: 5,
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-  select: {
-    maxWidth: 200,
-    maxHeight: 100,
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 0,
+    color: "#000000",
   },
   startButton: {
-    backgroundColor: "#e91e63",
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
+    width: "100%",
+    height: 70,
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 20,
+    backgroundColor: "#4F6D7A",
+    justifyContent: "center",
     alignItems: "center",
   },
   finishButton: {
-    backgroundColor: "#e91e63",
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
+    width: "100%",
+    height: 70,
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 20,
+    backgroundColor: "#4F6D7A",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+  },
+  counter: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#000000",
+    marginTop: 20,
+  },
+  timer: {
+    fontSize: 20,
+    color: "#000000",
+    marginTop: 20,
+  },
+  question: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#000000",
+    marginTop: 20,
+  },
+  cards: {
+    width: "100%",
+    height: 70,
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 20,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
     alignItems: "center",
   },
 });

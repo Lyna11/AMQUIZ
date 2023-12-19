@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAr
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { questions } from "../config/questions";
 
-const QuizScreen = ({ navigation, route }) => {
+const QuizScreen = ({ navigation, route }: any) => {
   const [searchText, setSearchText] = useState("");
 
   // Liste des thèmes de quiz récupérés depuis le fichier questions.ts
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
 
   redBlock: {
-    width: "85%",
+    width: "90%",
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "#DBE9EE",

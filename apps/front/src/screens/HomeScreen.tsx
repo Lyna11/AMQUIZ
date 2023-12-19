@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal, BackHandler } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Deconnexion from "../components/Deconnexion";
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = ({ navigation, route }: any) => {
   useEffect(() => {
     const backAction = () => {
       // Bloquer le bouton de retour
@@ -44,7 +44,11 @@ const HomeScreen = ({ navigation, route }) => {
     "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ];
 
-  const renderImageItem = ({ item }) => <Image source={{ uri: item }} style={styles.image} />;
+  interface RenderImageItemProps {
+    item: string;
+  }
+
+  const renderImageItem = ({ item }: RenderImageItemProps) => <Image source={{ uri: item }} style={styles.image} />;
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleDeco, setModalVisibleDeco] = useState(false);
   return (
