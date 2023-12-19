@@ -101,10 +101,10 @@ const HomeScreen = ({ navigation, route }: any) => {
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QuizScreen")}>
+            <TouchableOpacity style={styles.button}>
               <Text style={styles.text}>Jouer</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QuizScreen")}>
               <Text style={styles.text}>Aventure</Text>
             </TouchableOpacity>
           </View>
