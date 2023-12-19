@@ -7,10 +7,9 @@ import ConnexionScreen from "./src/screens/ConnexionScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import MenuScreen from "./src/screens/MenuScreen";
 import InscriptionScreen from "./src/screens/InscriptionScreen";
-import QuizScreen from "./src/screens/QuizScreen";
 import QuizGameScreen from "./src/screens/QuizGameScreen";
-
 import ShopScreen from "./src/screens/ShopScreen";
+import QuizScreen from "./src/screens/QuizScreen";
 
 const Stack = createStackNavigator();
 

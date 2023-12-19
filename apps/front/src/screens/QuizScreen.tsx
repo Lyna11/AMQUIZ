@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { questions } from "../config/questions";
 
 const QuizScreen = ({ navigation, route }) => {
   const [searchText, setSearchText] = useState("");
 
+  // Liste des thèmes de quiz récupérés depuis le fichier questions.ts
+  const theme = Object.keys(questions);
+  const themeMaj = theme.map((item) => item.charAt(0).toUpperCase() + item.slice(1));
+
   // Liste des boutons
-  const buttons = ["One Piece", "My Hero Academia", "Evangelion"];
+  const buttons = ["Naruto", "DragonBall", "Evangelion"];
 
   // Fonction pour gérer la recherche
   const filteredButtons = buttons.filter((button) => button.toLowerCase().includes(searchText.toLowerCase()));
@@ -29,9 +34,9 @@ const QuizScreen = ({ navigation, route }) => {
         <TextInput style={styles.searchInput} placeholder="Rechercher..." value={searchText} onChangeText={(text) => setSearchText(text)} />
 
         {/* Liste de boutons filtrés */}
-        {filteredButtons.map((button, index) => (
-          <TouchableOpacity key={index} style={styles.quizButton} onPress={() => navigation.navigate("QuizGameScreen", { button })}>
-            <Text style={styles.buttonText}>{button}</Text>
+        {filteredButtons.map((themeMaj, index) => (
+          <TouchableOpacity key={index} style={styles.quizButton} onPress={() => navigation.navigate("QuizGameScreen", { theme: themeMaj })}>
+            <Text style={styles.buttonText}>{themeMaj}</Text>
           </TouchableOpacity>
         ))}
       </View>
