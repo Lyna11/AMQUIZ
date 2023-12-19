@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
-const Deconnexion = ({ navigation, closeModal }) => {
+const Deconnexion = ({ closeModal }) => {
+  const { navigate } = useNavigation();
   const [username, setUsername] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -15,7 +17,7 @@ const Deconnexion = ({ navigation, closeModal }) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("user");
-      navigation.navigate("Connexion");
+      navigate("Connexion");
       setIsLoggedIn(true);
       closeModal(); // Appeler closeModal pour fermer le modal après la déconnexion
     } catch (error) {
