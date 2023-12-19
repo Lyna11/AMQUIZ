@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Pressable } from "react-native";
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Pressable, Image, Dimensions } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 
 import { questions } from "../config/questions";
@@ -29,6 +29,8 @@ export default function QuizScreen({ navigation, route }: any) {
   const [isPaused, setIsPaused] = useState<boolean>(true);
   // Booléen fin du quizz
   const [finQuizz, setFinQuizz] = useState(false);
+  const screenwidth: number = Dimensions.get("window").width;
+  const screenheight: number = Dimensions.get("window").height;
 
   /*************************************************************************************************************************/
 
@@ -149,20 +151,60 @@ export default function QuizScreen({ navigation, route }: any) {
           ) : (
             <>
               {finQuizz ? (
-                // Afficher le bouton FIN à la fin du quiz
-                <TouchableOpacity
-                  style={styles.finishButton}
-                  onPress={() => {
-                    setQuizzStatus(false);
-                    setIndex(0);
-                    setScore(0);
-                    setCountdown(7);
-                    setFinQuizz(false);
-                    navigation.navigate("QuizScreen");
-                  }}>
-                  <Text style={styles.counter}>{`Quizz terminé! Résultat : ${score}/${totalQuestions * 10}`}</Text>
-                  <Text>FIN</Text>
-                </TouchableOpacity>
+                <SafeAreaView style={{ backgroundColor: "#DBE9EE", height: screenheight }}>
+                  <View style={{ flex: 1, alignItems: "center", marginTop: "25%" }}>
+                    <View>
+                      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
+                        <Image source={require("../../assets/img/trophee.png")} style={{ width: screenwidth * 0.5, aspectRatio: 1 / 1 }} />
+                        <Text
+                          style={{
+                            fontSize: 30,
+                            fontWeight: "bold",
+                            color: "#000000",
+                            marginTop: 50,
+                          }}>
+                          NOM_DU_JOUEUR
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 28,
+                            fontWeight: "bold",
+                            color: "#000000",
+                          }}>
+                          {`Score : ${score}`}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            color: "#000000",
+                            marginTop: 40,
+                          }}>
+                          NOM_DU_JOUEUR_2
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            color: "#000000",
+                          }}>
+                          {`Score : ${score}`}
+                        </Text>
+                      </View>
+
+                      <TouchableOpacity
+                        style={styles.finishButton}
+                        onPress={() => {
+                          setQuizzStatus(false);
+                          setIndex(0);
+                          setScore(0);
+                          setCountdown(7);
+                          setFinQuizz(false);
+                          navigation.navigate("QuizScreen");
+                        }}>
+                        <Text style={styles.counter}>Revenir</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </SafeAreaView>
               ) : (
                 // Afficher le contenu du quiz lorsqu'il est en cours
                 <>
@@ -217,26 +259,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  finishButton: {
-    width: "100%",
-    height: 70,
-    borderRadius: 8,
-    padding: 16,
-    marginTop: 20,
-    backgroundColor: "#4F6D7A",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   buttonText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
-  },
-  counter: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#000000",
-    marginTop: 20,
   },
   timer: {
     fontSize: 20,
@@ -256,6 +282,20 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 20,
     backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  counter: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#ffffff",
+  },
+  finishButton: {
+    width: "100%",
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 50,
+    backgroundColor: "#4F6D7A",
     justifyContent: "center",
     alignItems: "center",
   },
