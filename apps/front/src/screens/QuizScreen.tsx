@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Image } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { questions } from "../config/questions";
 
@@ -17,81 +17,119 @@ const QuizScreen = ({ navigation, route }) => {
   const filteredButtons = buttons.filter((button) => button.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Ligne en haut */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.greenButton} onPress={() => navigation.navigate("Home")}>
-          <MaterialCommunityIcons name="shopping" color={"blue"} size={20} />
-        </TouchableOpacity>
-      </View>
-      <View>
-        <Text style={styles.title}>Liste des quizs</Text>
-      </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
+        <View style={styles.container}>
+          {/* Ligne en haut */}
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.icone} onPress={() => navigation.navigate("Home")}>
+              {/* image dans assets/img */}
+              <Image source={require("../../assets/img/back.png")} style={styles.iconeHome} />
+            </TouchableOpacity>
+          </View>
 
-      {/* Gros bloc rouge */}
-      <View style={styles.redBlock}>
-        {/* Input de recherche */}
-        <TextInput style={styles.searchInput} placeholder="Rechercher..." value={searchText} onChangeText={(text) => setSearchText(text)} />
+          <View style={styles.blocProfil}>
+            {/* Titre de la page */}
+            <View>
+              <Text style={styles.title}>Liste des quizs</Text>
+            </View>
 
-        {/* Liste de boutons filtrés */}
-        {filteredButtons.map((themeMaj, index) => (
-          <TouchableOpacity key={index} style={styles.quizButton} onPress={() => navigation.navigate("QuizGameScreen", { theme: themeMaj })}>
-            <Text style={styles.buttonText}>{themeMaj}</Text>
-          </TouchableOpacity>
-        ))}
+            {/* Gros bloc rouge */}
+            <View style={styles.redBlock}>
+              {/* Input de recherche */}
+              <TextInput style={styles.searchInput} placeholder="Rechercher..." value={searchText} onChangeText={(text) => setSearchText(text)} />
+
+              {/* Liste de boutons filtrés */}
+              {filteredButtons.map((themeMaj, index) => (
+                <TouchableOpacity key={index} style={styles.quizButton} onPress={() => navigation.navigate("QuizGameScreen", { theme: themeMaj })}>
+                  <Text style={styles.buttonText}>{themeMaj}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    justifyContent: "center",
+    flex: 1,
     alignItems: "center",
-    padding: 20,
+    backgroundColor: "#DBE9EE",
+    width: "90%",
   },
   header: {
-    marginBottom: 20,
-    alignSelf: "flex-start", // Ajoutez cette ligne pour placer le header en haut à gauche
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: "#DBE9EE",
+    marginTop: 50,
   },
-  greenButton: {
-    backgroundColor: "green",
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 10,
+  icone: {
+    width: 30,
+    height: 30,
+    alignSelf: "flex-start",
+  },
+  iconeHome: {
+    width: 30,
+    height: 30,
+  },
+  blocProfil: {
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginTop: "33%",
+  },
+
+  searchContent: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginTop: 20,
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 50,
+    color: "#000000",
   },
+
   redBlock: {
-    backgroundColor: "red",
-    height: "70%",
-    width: "90%",
-    padding: 20,
-    borderRadius: 10,
+    width: "85%",
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "#DBE9EE",
+    borderWidth: 2,
+    borderColor: "#000000",
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 20,
   },
   searchInput: {
-    backgroundColor: "white",
-    height: 40,
-    borderRadius: 5,
-    marginBottom: 20,
-    paddingLeft: 10,
+    width: "100%",
+    height: 50,
+    borderWidth: 2,
+    borderColor: "#000000",
+    borderRadius: 8,
+    padding: 16,
   },
   quizButton: {
-    backgroundColor: "white",
-    padding: 30,
-    borderRadius: 5,
-    marginBottom: 15,
+    width: "100%",
+    height: 70,
+    borderRadius: 8,
+    padding: 16,
+    marginTop: 20,
+    backgroundColor: "#4F6D7A",
     justifyContent: "center",
     alignItems: "center",
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
-    textAlign: "center",
+    color: "#FFFFFF",
   },
 });
 

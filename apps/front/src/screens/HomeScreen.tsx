@@ -75,8 +75,14 @@ const HomeScreen = ({ navigation, route }) => {
 
           {/* Barre de pièces */}
           <View style={styles.blocPieces}>
-            <Text style={styles.coinsText}>{"1000"}</Text>
-            <Text style={styles.levelText}>{"20"}</Text>
+            <View style={styles.blocPiecesLeft}>
+              <Image source={require("../../assets/img/coin.png")} style={styles.coinImage} />
+              <Text style={styles.coinsText}>{"1000"}</Text>
+            </View>
+            <View style={styles.blocLvlRight}>
+              <Image source={require("../../assets/img/lvl.png")} style={styles.lvlImage} />
+              <Text style={styles.levelText}>{"20"}</Text>
+            </View>
           </View>
 
           {/* Horizontal list of photos */}
@@ -210,17 +216,40 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#DBE9EE",
-    borderWidth: 2,
-    borderColor: "#000000",
-    borderRadius: 100,
     padding: 16,
-    marginTop: 20,
+    marginTop: 30,
+    borderBottomWidth: 2,
+    borderBottomColor: "#000000",
   },
   coinsText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#000000",
   },
+
+  coinImage: {
+    width: 30,
+    height: 30,
+  },
+  lvlImage: {
+    width: 40,
+    height: 30,
+  },
+
+  blocPiecesLeft: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#DBE9EE",
+  },
+
+  blocLvlRight: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#DBE9EE",
+  },
+
   levelText: {
     fontSize: 20,
     fontWeight: "bold",
@@ -231,7 +260,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#DBE9EE",
-    marginTop: 50,
+    marginTop: 40,
   },
   image: {
     width: 150,
