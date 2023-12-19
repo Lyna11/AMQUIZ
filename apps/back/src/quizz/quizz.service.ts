@@ -8,13 +8,13 @@ import { questions } from '../questions/questions.db';
 @Injectable()
 export class QuizzService {
   // DB Firebase
-  private collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+  private collection: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
   
   // Liste des quizzs
-  private quizzs: QuizzModel[] = [];
+  private quizzs: QuizzModel[];
 
   constructor() {
-    this.collection = firestore().collection('Quizz');
+    this.collection = firestore().collection('Quizz').get();
   }
 
   // Récupère toutes les instances de quizz
