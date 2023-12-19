@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Questions } from '../questions/questions.interface';
-import { Player } from '../player/player.interface';
+import { UserModel } from '../user/user.interface';
 
 export interface QuizzModel {
   id: number;
   questions: Questions;
-  players: Player[];
+  players: UserModel[];
 }

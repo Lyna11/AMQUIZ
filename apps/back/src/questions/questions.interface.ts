@@ -1,4 +1,4 @@
-export interface QuestionChoice {
+interface QuestionChoice {
   id: number;
   body: string;
 }
