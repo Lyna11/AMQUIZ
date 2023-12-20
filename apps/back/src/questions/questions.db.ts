@@ -3,7 +3,7 @@
 // Questions
 export const questions = {
   // Questions Naruto
-  narutoQuestions: [
+  naruto: [
     {
       index: 0,
       question: 'Lequel des ces personnages est le 1er Hokage?',
@@ -239,7 +239,7 @@ export const questions = {
     },
   ],
   // Question DBZ
-  dragonballQuestions: [
+  dragonball: [
     {
       index: 0,
       question:
@@ -475,7 +475,7 @@ export const questions = {
       answerId: 1,
     },
   ],
-  evangelionQuestions: [
+  evangelion: [
     {
       index: 0,
       question: "Quelle est l'unité que pilote Shinji?'",

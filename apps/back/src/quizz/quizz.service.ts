@@ -1,21 +1,45 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { firestore } from 'firebase-admin';
-import { Firestore, collection, getDocs } from '@firebase/firestore';
+import * as admin from 'firebase-admin';
+import { collection, getDocs } from '@firebase/firestore';
 import { QuizzModel } from './quizz.interface';
+import { UserModel } from '../user/user.interface';
+import { QuestionsModel } from '../questions/questions.interface';
 import { questions } from '../questions/questions.db';
-
+ 
 @Injectable()
 export class QuizzService {
-  // DB Firebase
-  private collection: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
-  
   // Liste des quizzs
-  private quizzs: QuizzModel[];
+  private quizzs: QuizzModel[] = [];
+  // Liste des joueurs
+  private users: UserModel[];
 
+  // Constructeur
   constructor() {
-    this.collection = firestore().collection("Quizz").get();
+    this.loadQuizzs();
+  }
+
+  // Charge la collection des Quizzs de Firebase
+  private async loadQuizzs(): Promise<void> {
+    try {
+      const quizzCollection = await admin.firestore().collection('Quizz').get();
+      quizzCollection.forEach((doc) => {
+        const quizzData = doc.data() as QuizzModel;
+        quizzData.questions = questions[quizzData.theme];
+        this.quizzs.push(quizzData);
+      });
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erreur lors du chargement des quizzs');
+    }
+  }
+
+  // TODO: à revoir, utilisé pour s'assurer que la liste n'est pas vide
+  public async fetchQuizzs(): Promise<void> {
+    if (this.quizzs.length === 0) {
+      await this.loadQuizzs();
+    }
   }
 
   // Récupère toutes les instances de quizz
