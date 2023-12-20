@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { firestore } from 'firebase-admin';
+import { Firestore, collection, getDocs } from '@firebase/firestore';
 import { QuizzModel } from './quizz.interface';
 import { questions } from '../questions/questions.db';
 
@@ -14,7 +15,7 @@ export class QuizzService {
   private quizzs: QuizzModel[];
 
   constructor() {
-    this.collection = firestore().collection('Quizz').get();
+    this.collection = firestore().collection("Quizz").get();
   }
 
   // Récupère toutes les instances de quizz

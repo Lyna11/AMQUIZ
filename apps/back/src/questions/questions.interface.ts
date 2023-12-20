@@ -7,8 +7,9 @@ export interface Questions {
   // Le thème (ex: Naruto)
   [theme: string]: [
     {
+      // Index de la question
       index: number;
-      // La queston
+      // Contenu de la question
       body: string;
       // Réponses possibles
       choices: QuestionChoice[];
