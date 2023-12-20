@@ -1,26 +1,17 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-//import { ConfigService } from '@nestjs/config';
 
 // Import Firebase
 import * as admin from 'firebase-admin';
-import { ServiceAccount } from 'firebase-admin';
 
 async function bootstrap() {
-  // Pas très clean mais méthode la plus simple
-  //const configService = new ConfigService();
-
-  // Config Firebase
-  const adminConfig: ServiceAccount = {
-    projectId: process.env.PROJECTID,
-    privateKey: process.env.FIREBASE_API_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-  };
-
+  const serviceAccount = require('/Users/felixchab/Documents/Git/AMQUIZ/amquiz-react-firebase-adminsdk-4yw63-b2004ca0b6.json');
+  
   // Firebase Admin App
   admin.initializeApp({
-    credential: admin.credential.cert(adminConfig),
+    credential: admin.credential.cert(serviceAccount),
     databaseURL: process.env.FIREBASE_URL,
   });
   
