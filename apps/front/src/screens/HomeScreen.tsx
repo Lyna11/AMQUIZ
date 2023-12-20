@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal, BackHandler } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal, BackHandler, Dimensions } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Deconnexion from "../components/Deconnexion";
 import { Pressable } from "react-native";
@@ -187,7 +187,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "90%",
     backgroundColor: "#DBE9EE",
-    marginTop: 50,
   },
   iconeSettings: {
     width: 30,
