@@ -2,20 +2,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { QuizzModel } from './quizz.interface';
-import { UserModel } from '../user/user.interface';
 import { questions } from '../questions/questions.db';
  
 @Injectable()
 export class QuizzService {
   // Liste des quizzs
   private quizzs: QuizzModel[] = [];
-  // Liste des joueurs
-  private users: UserModel[] = [];
 
   // Constructeur
   constructor() {
-    this.loadQuizzs();
-    this.fetchChecks();
+    this.fetchQuizzs;
   }
 
   // Charge la collection des Quizzs de Firebase
@@ -33,37 +29,10 @@ export class QuizzService {
     }
   }
 
-  // Charge la collection des Users de Firebase
-  private async loadUsers(): Promise<void> {
-    try {
-      const usersCollection = await admin.firestore().collection('Users').get();
-      usersCollection.forEach((doc) => { 
-        const userData = doc.data() as UserModel;
-        this.users.push(userData);
-      });
-    } catch (error) {
-      console.error(error);
-      throw new Error('Erreur lors du chargement des utilisateurs');
-    }
-  }
-
-  // On vérifie que les listes récupérées en BD ne sont pas vide
-  private async fetchChecks() {
-    this.fetchQuizzs();
-    this.fetchUsers();
-  }
-
   // Méthode de vérification Quizzs
-  public async fetchQuizzs(): Promise<void> {
+  private async fetchQuizzs(): Promise<void> {
     if (this.quizzs.length === 0) {
       await this.loadQuizzs();
-    }
-  }
-
-  // Méthode de vérification Users
-  public async fetchUsers(): Promise<void> {
-    if (this.users.length === 0) {
-      await this.loadUsers();
     }
   }
 

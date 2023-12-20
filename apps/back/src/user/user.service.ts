@@ -1,19 +1,37 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { firestore } from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import { UserModel } from './user.interface';
 
 @Injectable()
 export class UserService {
-  // DB Firebase
-  private collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
-
   // Liste des quizzs
   private users: UserModel[] = [];
 
   // Constructeur
   constructor() {
-    this.collection = firestore().collection('Users');
+    this.fetchUsers();
+  }
+
+  // Méthode de vérification Users
+  private async fetchUsers(): Promise<void> {
+    if (this.users.length === 0) {
+      await this.loadUsers();
+    }
+  }
+
+  // Charge la collection des Users de Firebase
+  private async loadUsers(): Promise<void> {
+    try {
+      const userCollection = await admin.firestore().collection('Users').get();
+      userCollection.forEach((doc) => { 
+        const userData = doc.data() as UserModel;
+        this.users.push(userData);
+      });
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erreur lors du chargement des users');
+    }
   }
 
   // Récupère toutes les joueurs
@@ -69,5 +87,4 @@ export class UserService {
     this.users[index] = updtUser;
     return updtUser;
   }
-
 }
