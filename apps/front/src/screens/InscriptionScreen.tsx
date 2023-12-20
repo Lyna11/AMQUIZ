@@ -2,28 +2,17 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import ConnexionScreen from "./ConnexionScreen";
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, fetchSignInMethodsForEmail, initializeAuth, getReactNativePersistence } from "firebase/auth";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { setDoc, doc } from "firebase/firestore";
 
-//import { REACT_APP_FIREBASE_API_KEY, AUTHDOMAIN, PROJECTID, STORAGEBUCKET, MESSAGINGSENDERID, APPID } from '@env';
+import { useFirebase } from "../hooks/firebase";
 
-/*const firebaseConfig = {
-  // Votre configuration Firebase
-  apiKey: REACT_APP_FIREBASE_API_KEY,
-  authDomain: AUTHDOMAIN,
-  projectId: PROJECTID,
-  storageBucket: STORAGEBUCKET,
-  messagingSenderId: MESSAGINGSENDERID,
-  appId: APPID,
-  measurementId: ""
-};*/
-//const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-//const auth = initializeAuth(app, {
-//  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-//});
+const InscriptionScreen = () => {
+  const { app, db, isInitialized, auth, currentUser } = useFirebase();
 
-const InscriptionScreen = ({ navigation }) => {
+  const navigation = useNavigation();
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
@@ -79,16 +68,28 @@ const InscriptionScreen = ({ navigation }) => {
 
     try {
       const emailExiste = await checkExistingEmail(email);
+
       if (!emailExiste) {
-        createUserWithEmailAndPassword(auth, email, motDePasse)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            console.log(user);
-            navigation.navigate("Connexion");
-          })
-          .catch((error) => {
-            setErrorMessage("L'e-mail est déjà utilisé");
-          });
+        const userCredential = await createUserWithEmailAndPassword(auth, email, motDePasse);
+        const user = userCredential.user;
+
+        // Store user information in Firestore
+        const userDocRef = await setDoc(doc(db, "Users", user.uid), {
+          username: nom,
+          level: 0, // Set the default values for other fields
+          money: 0,
+          profilePic:
+            "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          skills: "",
+          comChestCount: 0,
+          rareChestCount: 0,
+          legChestCount: 0,
+          uid: user.uid,
+        });
+
+        console.log("After Firestore write");
+
+        navigation.navigate("Connexion");
       } else {
         setErrorMessage("L'e-mail est déjà utilisé");
       }
@@ -96,8 +97,15 @@ const InscriptionScreen = ({ navigation }) => {
       setErrorMessage(error.message);
     }
   };
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#DBE9EE",
+      }}>
       <View style={styles.container}>
         <Text style={styles.title}>Quiz animés/mangas</Text>
 

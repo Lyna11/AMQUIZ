@@ -1,25 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
-import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, fetchSignInMethodsForEmail, initializeAuth, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { REACT_APP_FIREBASE_API_KEY, AUTHDOMAIN, PROJECTID, STORAGEBUCKET, MESSAGINGSENDERID, APPID } from "@env";
-import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-
-const firebaseConfig = {
-  // Votre configuration Firebase
-  apiKey: REACT_APP_FIREBASE_API_KEY,
-  authDomain: AUTHDOMAIN,
-  projectId: PROJECTID,
-  storageBucket: STORAGEBUCKET,
-  messagingSenderId: MESSAGINGSENDERID,
-  appId: APPID,
-  measurementId: "",
-};
-const app = initializeApp(firebaseConfig);
-//const auth = getAuth();
-const auth = initializeAuth(app);
+import { useFirebase } from "../hooks/firebase";
 
 const ConnexionScreen = () => {
   const navigation = useNavigation();
@@ -28,6 +12,7 @@ const ConnexionScreen = () => {
   const [username, setUsername] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { app, db, isInitialized, auth, currentUser } = useFirebase();
 
   useEffect(() => {
     checkSession();
@@ -35,26 +20,47 @@ const ConnexionScreen = () => {
 
   const checkSession = async () => {
     try {
-      const user = await AsyncStorage.getItem("user");
-      if (user) {
-        const savedEmail = JSON.parse(user).email;
-        const emailParts = savedEmail.split("@");
-        const username = emailParts[0];
-        setUsername(username);
-        navigation.navigate("Menu", { screen: "Home" });
+      const userString = await AsyncStorage.getItem("user");
+
+      if (userString) {
+        const user = JSON.parse(userString);
+
+        // Vérifier la date d'expiration
+        const expirationTime = new Date(user.expirationTime);
+        const currentTime = new Date();
+
+        if (currentTime < expirationTime) {
+          // L'utilisateur est connecté
+          setUsername(user.username);
+          navigation.navigate("Menu", { screen: "Home" });
+        } else {
+          await clearSession();
+        }
+      } else {
       }
     } catch (error) {
       console.log("Error checking session:", error);
     }
   };
-  const saveSession = async (user: User) => {
+
+  const saveSession = async (user) => {
     try {
-      await AsyncStorage.setItem("user", JSON.stringify(user));
+      const expirationTime = new Date();
+      expirationTime.setHours(expirationTime.getHours() + 1);
+
+      const userToSave = {
+        username: user.username,
+        email: user.email,
+        expirationTime: expirationTime.toISOString(),
+      };
+
+      await AsyncStorage.setItem("user", JSON.stringify(userToSave));
       console.log("Session saved successfully");
     } catch (error) {
       console.log("Error saving session:", error);
     }
   };
+
   const clearSession = async () => {
     try {
       await AsyncStorage.removeItem("user");
@@ -104,7 +110,13 @@ const ConnexionScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EE" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#DBE9EE",
+      }}>
       <View style={styles.container}>
         <Text style={styles.title}>Quiz animés/mangas</Text>
 

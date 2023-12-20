@@ -1,14 +1,36 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, SafeAreaView, Modal, BackHandler } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Deconnexion from "../components/Deconnexion";
 import { Pressable } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Deconnexion from "../components/Deconnexion";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+
+import { useNavigation } from "@react-navigation/native";
+
+import { doc, getDoc } from "firebase/firestore";
+import { useFirebase } from "../hooks/firebase";
+
 const HomeScreen = () => {
-  const navigation = useNavigation()
-  const { params } = useRoute();
-  const username = params?.username;
+  useEffect(() => {
+    const backAction = () => {
+      // Bloquer le bouton de retour
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+    // Nettoyer l'effet lors du démontage de l'écran
+    return () => backHandler.remove();
+  }, []); // Assurez-vous
+
+  const { navigate } = useNavigation();
+  //const { params } = useRoute();
+  const [username, setUsername] = useState("");
+  const [level, setlevel] = useState("");
+  const [money, setmoney] = useState("");
+  const [pic, setpic] = useState("");
+
+  const { db, isInitialized, currentUser } = useFirebase();
   // Sample list of image URLs
   const imageList = [
     "https://images.unsplash.com/photo-1615592389070-bcc97e05ad01?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -19,8 +41,47 @@ const HomeScreen = () => {
     "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ];
 
-  const renderImageItem = ({ item }) => <Image source={{ uri: item }} style={styles.image} />;
+  useEffect(() => {
+    if (!isInitialized) return;
+    const fetchUsername = async () => {
+      // Replace 'userId' with the actual user ID (you need to retrieve it from authentication or another source)
+      const userId = currentUser?.uid ?? null;
+      console.log({ userId });
+      if (!userId) return;
+
+      console.log({ userId });
+      const userDoc = await getDoc(doc(db, "Users", userId));
+
+      console.log({ userDoc });
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setUsername(userData.username);
+        setlevel(userData.level);
+        setmoney(userData.money);
+        setpic(userData.profilePic); // Replace 'username' with the actual field name in your database
+      }
+    };
+
+    fetchUsername();
+  }, [isInitialized]);
+
+  interface RenderImageItemProps {
+    item: string;
+  }
+
+  const renderImageItem = ({ item }: RenderImageItemProps) => <Image source={{ uri: item }} style={styles.image} />;
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleDeleteAccount = () => {
+    // Ajoutez ici le code pour supprimer le compte
+
+    // Fermez le modal
+    setModalVisible(false);
+
+    // Naviguez vers la page "Suppression"
+    navigate("Suppression");
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
@@ -36,21 +97,28 @@ const HomeScreen = () => {
           {/* Photo de profil */}
           <View style={styles.blocProfil}>
             <View style={styles.blocProfilRight}>
-              <Text style={styles.playerNameText}>{`${username}`}</Text>
-              <Text style={styles.playerDescriptionText}>{"Petite description"}</Text>
+              <Text style={styles.playerNameText}>{username}</Text>
             </View>
-            <Image
-              source={{
-                uri: "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-              }}
-              style={styles.profileImage}
-            />
+            {pic ? (
+              <Image
+                source={{
+                  uri: pic,
+                }}
+                style={styles.profileImage}
+              />
+            ) : null}
           </View>
 
           {/* Barre de pièces */}
           <View style={styles.blocPieces}>
-            <Text style={styles.coinsText}>{"1000"}</Text>
-            <Text style={styles.levelText}>{"20"}</Text>
+            <View style={styles.blocPiecesLeft}>
+              <Image source={require("../../assets/img/coin.png")} style={styles.coinImage} />
+              <Text style={styles.coinsText}>{money}</Text>
+            </View>
+            <View style={styles.blocLvlRight}>
+              <Image source={require("../../assets/img/lvl.png")} style={styles.lvlImage} />
+              <Text style={styles.levelText}>{level}</Text>
+            </View>
           </View>
 
           {/* Horizontal list of photos */}
@@ -68,7 +136,7 @@ const HomeScreen = () => {
             <TouchableOpacity style={styles.button}>
               <Text style={styles.text}>Jouer</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => navigate("QuizScreen")}>
               <Text style={styles.text}>Aventure</Text>
             </TouchableOpacity>
           </View>
@@ -97,14 +165,14 @@ const HomeScreen = () => {
             {/* Nouvelle structure pour les boutons horizontaux */}
             <View style={styles.horizontalButtonsContainer}>
               <TouchableOpacity style={styles.horizontalButton}>
-                <Deconnexion navigation={navigation} closeModal={() => setModalVisible(!modalVisible)} />
+                <Deconnexion closeModal={() => setModalVisible(!modalVisible)} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.horizontalButton}>
+              <TouchableOpacity style={styles.horizontalButton} onPress={handleDeleteAccount}>
                 <Text style={styles.buttonText}>Supprimer mon compte</Text>
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity style={styles.buttonClose} onPress={() => setModalVisible(!modalVisible)}>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.buttonText}>Fermer</Text>
           </TouchableOpacity>
         </View>
@@ -161,17 +229,40 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#DBE9EE",
-    borderWidth: 2,
-    borderColor: "#000000",
-    borderRadius: 100,
     padding: 16,
-    marginTop: 20,
+    marginTop: 30,
+    borderBottomWidth: 2,
+    borderBottomColor: "#000000",
   },
   coinsText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#000000",
   },
+
+  coinImage: {
+    width: 30,
+    height: 30,
+  },
+  lvlImage: {
+    width: 40,
+    height: 30,
+  },
+
+  blocPiecesLeft: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#DBE9EE",
+  },
+
+  blocLvlRight: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#DBE9EE",
+  },
+
   levelText: {
     fontSize: 20,
     fontWeight: "bold",
@@ -182,7 +273,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#DBE9EE",
-    marginTop: 50,
+    marginTop: 40,
   },
   image: {
     width: 150,
