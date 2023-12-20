@@ -13,7 +13,6 @@ export class QuizzController {
     return this.quizzService.findAll();
   }
 
-  // /!\ @PARAM TOUJOURS EN STRING DONC CONVERTIR SI (ici 'ID') NUMERIQUE DANS INTERFACE /!\
   @Get(':id')
   public findOne(@Param('id', ParseIntPipe) id: number): QuizzModel {
     console.log("[QUIZZ] - findOne()");

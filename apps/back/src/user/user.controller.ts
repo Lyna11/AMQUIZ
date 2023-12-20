@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Put, Delete, Param, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -20,12 +19,12 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  // TODO: à voir si utile
   // Renvoi vers la liste des coups spéciaux du joueur
   @Get(':id/skills')
-  public findSkills(@Param('id', ParseIntPipe) id: number): UserModel {
+  public findSkills(@Param('id', ParseIntPipe) id: number): string[] {
     console.log('[USER] - findSkills()');
-    // TODO: récupérer pouvoirs du joueur dont l'id est renseigné 
-    return this.userService.findOne(id); // temporaire
+    return this.userService.findOne(id).skills;
   }
 
   @Put(':id')
