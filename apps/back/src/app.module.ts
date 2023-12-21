@@ -18,8 +18,8 @@ import {FirebaseAuthModule} from '@whitecloak/nestjs-passport-firebase';
     ConfigModule.forRoot({ isGlobal: true }),
     ChestsModule,
     FirebaseAuthModule.register({
-      audience: '<PROJECT_ID>',
-      issuer: 'https://securetoken.google.com/<PROJECT_ID>',
+      audience: 'amquiz-react',
+      issuer: 'https://securetoken.google.com/amquiz-react',
   }),
 
   ],
