@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
@@ -7,7 +5,7 @@ import { AppModule } from './app.module';
 import * as admin from 'firebase-admin';
 
 async function bootstrap() {
-  const serviceAccount = require('/Users/felixchab/Documents/Git/AMQUIZ/amquiz-react-firebase-adminsdk-4yw63-b2004ca0b6.json');
+  const serviceAccount = require('../../../amquiz-react-firebase-adminsdk-4yw63-b2004ca0b6.json');
   
   // Firebase Admin App
   admin.initializeApp({
