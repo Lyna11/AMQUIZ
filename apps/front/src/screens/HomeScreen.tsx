@@ -5,10 +5,14 @@ import Deconnexion from "../components/Deconnexion";
 import { Pressable } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import { doc, getDoc } from "firebase/firestore";
 import { useFirebase } from "../hooks/firebase";
+import ProfileImgSelector from "../components/ProfileImgSelector";
+import ProfileUserInfos from "../components/ProfileUserInfos";
+import ProfileUserEdit from "../components/ProfileUserEdit";
+import socket from "../socket";
 
 const HomeScreen = () => {
   useEffect(() => {
@@ -40,31 +44,6 @@ const HomeScreen = () => {
     "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ];
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchUsername = async () => {
-        // Replace 'userId' with the actual user ID (you need to retrieve it from authentication or another source)
-        const userId = currentUser?.uid ?? null;
-        console.log({ userId });
-        if (!userId) return;
-
-        console.log({ userId });
-        const userDoc = await getDoc(doc(db, "Users", userId));
-
-        console.log({ userDoc });
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUsername(userData.username);
-          setlevel(userData.level);
-          setmoney(userData.money);
-          setpic(userData.profilePic); // Replace 'username' with the actual field name in your database
-        }
-      };
-
-      fetchUsername();
-    }, [isInitialized])
-  );
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -105,6 +84,40 @@ const HomeScreen = () => {
 
     // Naviguez vers la page "Suppression"
     navigate("Suppression");
+  };
+
+  //Partie socket
+  useEffect(() => {
+    const onPlayerJoined = () => {
+      //Afficher page recherche Quiz
+      navigate("RechercheQuiz");
+    };
+    // subscribe to sockets
+    socket.on("playerJoined", onPlayerJoined);
+
+    return () => {
+      // clean subscriptions to socket
+      socket.off("playerJoined", onPlayerJoined);
+    };
+  }, []);
+
+  useEffect(() => {
+    const nextQuestion = () => {
+      //Afficher page question
+      navigate("QuizGameMultiScreen");
+    };
+    // subscribe to sockets
+    socket.on("nextQuestion", nextQuestion);
+
+    return () => {
+      // clean subscriptions to socket
+      socket.off("nextQuestion", nextQuestion);
+    };
+  }, []);
+
+  const searchRoom2 = () => {
+    //Envoyer socket
+    socket.emitWithAck("searchRoom", username);
   };
 
   return (
@@ -158,7 +171,7 @@ const HomeScreen = () => {
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={searchRoom2}>
               <Text style={styles.text}>Jouer</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => navigate("QuizScreen")}>
@@ -212,7 +225,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "90%",
     backgroundColor: "#DBE9EE",
-    marginTop: 50,
   },
   iconeSettings: {
     width: 30,
