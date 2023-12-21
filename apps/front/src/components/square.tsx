@@ -30,7 +30,7 @@ const RoundedSquare: React.FC<RoundedSquareProps> = ({ montant, image, piece }) 
 
         // Vérifiez si l'utilisateur a assez d'argent
         const newMoney = userData.money - montant; // Soustrayez le coût du coffre
-        const newChestCount = userData.chestCount + 1; // Ajoutez 1 au compteur de coffre
+        const newChestCount = userData.comChestCount + 1; // Ajoutez 1 au compteur de coffre
         //Afficher une alerte sur l'écran
 
         if (newMoney < 0) {
@@ -47,7 +47,7 @@ const RoundedSquare: React.FC<RoundedSquareProps> = ({ montant, image, piece }) 
         // Mettez à jour les données de l'utilisateur dans Firebase
         await updateDoc(doc(db, "Users", userId), {
           money: newMoney,
-          chestCount: newChestCount,
+          comChestCount: newChestCount,
         });
 
         console.log("Données utilisateur mises à jour avec succès !");

@@ -18,9 +18,9 @@ export default function BoutiqueScreen() {
         </View>
         <Title_ text="PIECES" />
         <View style={styles.line}>
-          <RoundedSquareMoney euros="2€" image={require("../../assets/img/coin.png")} piece={require("../../assets/img/coin.png")}></RoundedSquareMoney>
-          <RoundedSquareMoney euros="4€" image={require("../../assets/img/coin.png")} piece={require("../../assets/img/coin.png")}></RoundedSquareMoney>
-          <RoundedSquareMoney euros="6€" image={require("../../assets/img/coin.png")} piece={require("../../assets/img/coin.png")}></RoundedSquareMoney>
+          <RoundedSquareMoney euros="2€" image={require("../../assets/img/coin.png")}></RoundedSquareMoney>
+          <RoundedSquareMoney euros="4€" image={require("../../assets/img/coin.png")}></RoundedSquareMoney>
+          <RoundedSquareMoney euros="6€" image={require("../../assets/img/coin.png")}></RoundedSquareMoney>
         </View>
       </View>
     </SafeAreaView>
