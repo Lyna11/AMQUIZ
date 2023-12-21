@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "90%",
     backgroundColor: "#DBE9EE",
+    marginTop: 50,
   },
   iconeSettings: {
     width: 30,
