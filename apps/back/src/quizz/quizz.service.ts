@@ -1,20 +1,34 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { firestore } from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import { QuizzModel } from './quizz.interface';
 import { questions } from '../questions/questions.db';
-
+ 
 @Injectable()
 export class QuizzService {
-  // DB Firebase
-  private collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
-  
   // Liste des quizzs
   private quizzs: QuizzModel[] = [];
 
+  // Constructeur
   constructor() {
-    this.collection = firestore().collection('Quizz');
+    this.loadQuizzs();
+  }
+
+  // Charge la collection des Quizzs de Firebase
+  private async loadQuizzs(): Promise<void> {
+    if (this.quizzs.length === 0) {
+      try {
+        const quizzCollection = await admin.firestore().collection('Quizz').get();
+        quizzCollection.forEach((doc) => {
+          const quizzData = doc.data() as QuizzModel;
+          quizzData.questions = questions[quizzData.theme];
+          this.quizzs.push(quizzData);
+        });
+      } catch (error) {
+        console.error(error);
+        throw new Error('Erreur lors du chargement des quizzs');
+      }
+    }
   }
 
   // Récupère toutes les instances de quizz
@@ -33,7 +47,7 @@ export class QuizzService {
 
   // Créer un quizz
   public create(quizz: QuizzModel): QuizzModel {
-    // Récupère le premier ID disponible
+    // Récupère le premier ID disponible 
     const maxId: number = Math.max(...this.quizzs.map((quizz) => quizz.id), 0);
     const id: number = maxId + 1;
     // Ajout du quizz créér au quizzs existants

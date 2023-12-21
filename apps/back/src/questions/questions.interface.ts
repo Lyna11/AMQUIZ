@@ -1,17 +1,18 @@
-interface QuestionChoice {
+interface QuestionsChoice {
   id: number;
-  body: string;
+  answer: string;
 }
 
-export interface Questions {
+export interface QuestionsModel {
   // Le thème (ex: Naruto)
   [theme: string]: [
     {
+      // Index de la question
       index: number;
-      // La queston
+      // Contenu de la question
       body: string;
       // Réponses possibles
-      choices: QuestionChoice[];
+      choices: QuestionsChoice[];
       // ID de la réponse correcte
       answerId: number;
     },

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Put, Delete, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserModel } from './user.interface';
 
@@ -14,35 +13,35 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  public findOne(@Param('id', ParseIntPipe) id: number): UserModel {
+  @Get(':uid')
+  public findOne(@Param('uid') uid: string): UserModel {
     console.log('[USER] - findOne()');
-    return this.userService.findOne(id);
+    return this.userService.findOne(uid);
   }
 
+  // TODO: à voir si utile
   // Renvoi vers la liste des coups spéciaux du joueur
-  @Get(':id/skills')
-  public findSkills(@Param('id', ParseIntPipe) id: number): UserModel {
+  @Get(':uid/skills')
+  public findSkills(@Param('uid') uid: string): string[] {
     console.log('[USER] - findSkills()');
-    // TODO: récupérer pouvoirs du joueur dont l'id est renseigné 
-    return this.userService.findOne(id); // temporaire
+    return this.userService.findOne(uid).skills;
   }
 
-  @Put(':id')
+  @Put(':uid')
   public create(user: UserModel): UserModel {
     console.log('[USER] - create()');
     return this.userService.create(user);
   }
 
-  @Delete(':id')
-  public delete(@Param('id', ParseIntPipe) id: number): void {
+  @Delete(':uid')
+  public delete(@Param('uid') uid: string): void {
     console.log('[USER] - delete()');
-    this.userService.delete(id);
+    this.userService.delete(uid);
   }
 
-  @Put(':id')
-  public update(@Param('id', ParseIntPipe) id: number, user: UserModel): UserModel {
+  @Put(':uid')
+  public update(@Param('uid') uid: string, user: UserModel): UserModel {
     console.log('[PLAYER] - update()');
-    return this.userService.update(id, user);
+    return this.userService.update(uid, user);
   }
 }
