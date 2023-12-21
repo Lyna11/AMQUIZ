@@ -5,11 +5,10 @@ import { QuizzModule } from './quizz/quizz.module';
 import { QuestionsModule } from './questions/questions.module';
 import { UserModule } from './user/user.module';
 import { QuizzController } from './quizz/quizz.controller';
-import { HomeController } from './home/home.controller';
 
 @Module({
   imports: [QuizzModule, QuestionsModule, UserModule, ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [QuizzController, HomeController],
+  controllers: [QuizzController],
   providers: [],
 })
 export class AppModule { }
