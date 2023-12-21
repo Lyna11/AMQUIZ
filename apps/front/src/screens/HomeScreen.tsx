@@ -5,7 +5,7 @@ import Deconnexion from "../components/Deconnexion";
 import { Pressable } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { doc, getDoc } from "firebase/firestore";
 import { useFirebase } from "../hooks/firebase";
@@ -40,6 +40,31 @@ const HomeScreen = () => {
     "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1614583225154-5fcdda07019e?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ];
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUsername = async () => {
+        // Replace 'userId' with the actual user ID (you need to retrieve it from authentication or another source)
+        const userId = currentUser?.uid ?? null;
+        console.log({ userId });
+        if (!userId) return;
+
+        console.log({ userId });
+        const userDoc = await getDoc(doc(db, "Users", userId));
+
+        console.log({ userDoc });
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUsername(userData.username);
+          setlevel(userData.level);
+          setmoney(userData.money);
+          setpic(userData.profilePic); // Replace 'username' with the actual field name in your database
+        }
+      };
+
+      fetchUsername();
+    }, [isInitialized])
+  );
 
   useEffect(() => {
     if (!isInitialized) return;

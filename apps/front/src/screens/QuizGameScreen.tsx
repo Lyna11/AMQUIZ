@@ -4,12 +4,13 @@ import SelectDropdown from "react-native-select-dropdown";
 
 import { questions } from "../config/questions";
 
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useFirebase } from "../hooks/firebase";
 // Ecran de Quizz
 export default function QuizScreen({ navigation, route }: any) {
   //Appel BDD
   const [username, setUsername] = useState("");
+  const [money, setmoney] = useState("");
   const { db, isInitialized, currentUser } = useFirebase();
   // Récupération du thème choisi
   const { params } = route;
@@ -76,6 +77,29 @@ export default function QuizScreen({ navigation, route }: any) {
     return () => clearInterval(interval);
   }, [countdown, isPaused]);
 
+  const updateUserData = async (newScore: number, newMoney: number) => {
+    // Replace 'userId' with the actual user ID (you need to retrieve it from authentication or another source)
+    const userId = currentUser?.uid ?? null;
+    if (!userId) return;
+
+    // Obtenez une référence au document de l'utilisateur
+    const userRef = doc(db, "Users", userId);
+
+    try {
+      // Mettez à jour les données de l'utilisateur dans la base de données
+      await updateDoc(userRef, {
+        score: newScore,
+        money: money + newMoney,
+      });
+
+      console.log("Données utilisateur mises à jour avec succès !");
+      console.log("Nouveau score:", newScore);
+      console.log("Nouvelle money:", newMoney);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des données utilisateur:", error);
+    }
+  };
+
   // Gestion boucle de jeu
   useEffect(() => {
     // Lancement du Timer
@@ -83,12 +107,16 @@ export default function QuizScreen({ navigation, route }: any) {
       setIsPaused(false);
       setFinQuizz(false);
     }
+
     // Le quizz s'arrête lorsqu'il n'y a plus de questions
     if ((quizzStatus === true && index >= data.length) || currentQuestion === undefined) {
       setIsPaused(true);
       setFinQuizz(true);
+
+      // Appeler la fonction pour mettre à jour les données utilisateur avec le score actuel et la valeur de money actuelle
+      updateUserData(score, score);
     }
-  }, [currentQuestion, quizzStatus]);
+  }, [currentQuestion, quizzStatus, score, money]);
 
   // Gestion choix réponses
   useEffect(() => {
@@ -137,6 +165,7 @@ export default function QuizScreen({ navigation, route }: any) {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         setUsername(userData.username);
+        setmoney(userData.money);
       }
     };
 
