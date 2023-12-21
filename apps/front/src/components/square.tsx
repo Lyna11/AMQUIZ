@@ -31,11 +31,17 @@ const RoundedSquare: React.FC<RoundedSquareProps> = ({ montant, image, piece }) 
         // Vérifiez si l'utilisateur a assez d'argent
         const newMoney = userData.money - montant; // Soustrayez le coût du coffre
         const newChestCount = userData.chestCount + 1; // Ajoutez 1 au compteur de coffre
+        //Afficher une alerte sur l'écran
 
         if (newMoney < 0) {
           // L'utilisateur n'a pas assez d'argent
-          console.log("Pas assez d'argent !");
+          // Afficher une aletre sur l'écran
+          alert("Vous n'avez pas assez d'argent pour acheter ce coffre !");
           return;
+        } else {
+          // L'utilisateur a assez d'argent
+          // Afficher une alerte sur l'écran
+          alert("Vous avez acheté un coffre !");
         }
 
         // Mettez à jour les données de l'utilisateur dans Firebase
