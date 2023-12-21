@@ -10,15 +10,15 @@ export default function BoutiqueScreen() {
       <View style={styles.container}>
         <Title_ text="COFFRES" />
         <View style={styles.line}>
-          <RoundedSquare montant="2000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>
-          <RoundedSquare montant="3000" image={require("../../assets/img/coffre2.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>
-          <RoundedSquare montant="4000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>
+          <RoundedSquare montant="20" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquare montant="30" image={require("../../assets/img/coffre2.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquare montant="40" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
         </View>
         <Title_ text="PIECES" />
         <View style={styles.line}>
-          <RoundedSquare montant="2000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>
-          <RoundedSquare montant="5000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>
-          <RoundedSquare montant="6000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/piece.png")}></RoundedSquare>
+          <RoundedSquare montant="0000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquare montant="0000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquare montant="0000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
         </View>
       </View>
     </SafeAreaView>
