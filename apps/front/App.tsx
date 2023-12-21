@@ -11,21 +11,26 @@ import QuizGameScreen from "./src/screens/QuizGameScreen";
 import ShopScreen from "./src/screens/ShopScreen";
 import QuizScreen from "./src/screens/QuizScreen";
 import SuppressionCompteScreen from "./src/screens/SuppressionCompteScreen";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const Stack = createStackNavigator();
+const queryClient = new QueryClient()
+
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Connexion" component={ConnexionScreen} options={{ headerShown: false, gestureEnabled: false }} />
-        <Stack.Screen name="Menu" component={MenuScreen} options={{ headerShown: false, gestureEnabled: false }} />
-        <Stack.Screen name="Inscription" component={InscriptionScreen} options={{ headerShown: false, gestureEnabled: false }} />
-        <Stack.Screen name="QuizScreen" component={QuizScreen} options={{ headerShown: false, gestureEnabled: false }} />
-        <Stack.Screen name="QuizGameScreen" component={QuizGameScreen} options={{ headerShown: false, gestureEnabled: false }} />
-        <Stack.Screen name="Suppression" component={SuppressionCompteScreen} options={{ headerShown: false, gestureEnabled: false }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <Stack.Navigator>
+            <Stack.Screen name="Connexion" component={ConnexionScreen} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Menu" component={MenuScreen} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Inscription" component={InscriptionScreen} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="QuizScreen" component={QuizScreen} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="QuizGameScreen" component={QuizGameScreen} options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="Suppression" component={SuppressionCompteScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+    </QueryClientProvider>
   );
 };
 

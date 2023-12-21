@@ -3,12 +3,27 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { QuizzModule } from './quizz/quizz.module';
 import { QuestionsModule } from './questions/questions.module';
-import { UserModule } from './user/user.module';
-import { QuizzController } from './quizz/quizz.controller';
+import { PlayerModule } from './player/player.module';
+import { EventsModule } from './events/events.module';
+import { ChestsModule } from './chests/chests.module';
+import {FirebaseAuthModule} from '@whitecloak/nestjs-passport-firebase';
+
 
 @Module({
-  imports: [QuizzModule, QuestionsModule, UserModule, ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [QuizzController],
+  imports: [
+    QuizzModule,
+    QuestionsModule,
+    PlayerModule,
+    EventsModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    ChestsModule,
+    FirebaseAuthModule.register({
+      audience: '<PROJECT_ID>',
+      issuer: 'https://securetoken.google.com/<PROJECT_ID>',
+  }),
+
+  ],
+  controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
