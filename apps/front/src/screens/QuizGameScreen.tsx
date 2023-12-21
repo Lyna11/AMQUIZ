@@ -4,8 +4,13 @@ import SelectDropdown from "react-native-select-dropdown";
 
 import { questions } from "../config/questions";
 
+import { doc, getDoc } from "firebase/firestore";
+import { useFirebase } from "../hooks/firebase";
 // Ecran de Quizz
 export default function QuizScreen({ navigation, route }: any) {
+  //Appel BDD
+  const [username, setUsername] = useState("");
+  const { db, isInitialized, currentUser } = useFirebase();
   // Récupération du thème choisi
   const { params } = route;
   const nomDuQuizz = params?.theme;
@@ -116,6 +121,28 @@ export default function QuizScreen({ navigation, route }: any) {
     return () => {};
   }, [selectedAnswer, currentQuestion]);
 
+  //Recupération du username
+  useEffect(() => {
+    if (!isInitialized) return;
+    const fetchUsername = async () => {
+      // Replace 'userId' with the actual user ID (you need to retrieve it from authentication or another source)
+      const userId = currentUser?.uid ?? null;
+      console.log({ userId });
+      if (!userId) return;
+
+      console.log({ userId });
+      const userDoc = await getDoc(doc(db, "Users", userId));
+
+      console.log({ userDoc });
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setUsername(userData.username);
+      }
+    };
+
+    fetchUsername();
+  }, [isInitialized]);
+
   /*************************************************************************************************************************/
 
   // Rendu
@@ -123,17 +150,16 @@ export default function QuizScreen({ navigation, route }: any) {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
         <View style={styles.container}>
-          <Text style={styles.title}>{`Quiz ${nomDuQuizz} !`}</Text>
-
           {quizzStatus === false && finQuizz === false ? (
             <>
+              <Text style={styles.title}>{`Lancer le Quiz ${nomDuQuizz} ?`}</Text>
               <Pressable
                 style={styles.startButton}
                 onPress={() => {
                   setQuizzStatus(true);
                   setTheme(nomDuQuizz);
                 }}>
-                <Text style={styles.buttonText}>Démarrer</Text>
+                <Text style={styles.buttonText}>Oui</Text>
               </Pressable>
               <TouchableOpacity
                 style={styles.finishButton}
@@ -145,63 +171,33 @@ export default function QuizScreen({ navigation, route }: any) {
                   setFinQuizz(false);
                   navigation.navigate("QuizScreen");
                 }}>
-                <Text style={styles.buttonText}>Revenir</Text>
+                <Text style={styles.buttonText}>Non</Text>
               </TouchableOpacity>
             </>
           ) : (
             <>
               {finQuizz ? (
                 <SafeAreaView style={{ backgroundColor: "#DBE9EE", height: screenheight }}>
-                  <View style={{ flex: 1, alignItems: "center", marginTop: "25%" }}>
+                  <View style={{ flex: 1, alignItems: "center" }}>
                     <View>
                       <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
-                        <Image source={require("../../assets/img/trophee.png")} style={{ width: screenwidth * 0.5, aspectRatio: 1 / 1 }} />
-                        <Text
-                          style={{
-                            fontSize: 30,
-                            fontWeight: "bold",
-                            color: "#000000",
-                            marginTop: 50,
+                        <Image source={require("../../assets/img/trophee.png")} style={styles.imageWin} />
+                        <Text style={styles.messageWin}>Bien joué !</Text>
+                        <Text style={styles.playerName}>{username}</Text>
+                        <Text style={styles.playerScore}>{`Tu as obtenue un score de : ${score}`}</Text>
+                        <TouchableOpacity
+                          style={styles.startButton}
+                          onPress={() => {
+                            setQuizzStatus(false);
+                            setIndex(0);
+                            setScore(0);
+                            setCountdown(7);
+                            setFinQuizz(false);
+                            navigation.navigate("QuizScreen");
                           }}>
-                          NOM_DU_JOUEUR
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 28,
-                            fontWeight: "bold",
-                            color: "#000000",
-                          }}>
-                          {`Score : ${score}`}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            color: "#000000",
-                            marginTop: 40,
-                          }}>
-                          NOM_DU_JOUEUR_2
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            color: "#000000",
-                          }}>
-                          {`Score : ${score}`}
-                        </Text>
+                          <Text style={styles.buttonText}>Retour</Text>
+                        </TouchableOpacity>
                       </View>
-
-                      <TouchableOpacity
-                        style={styles.finishButton}
-                        onPress={() => {
-                          setQuizzStatus(false);
-                          setIndex(0);
-                          setScore(0);
-                          setCountdown(7);
-                          setFinQuizz(false);
-                          navigation.navigate("QuizScreen");
-                        }}>
-                        <Text style={styles.counter}>Revenir</Text>
-                      </TouchableOpacity>
                     </View>
                   </View>
                 </SafeAreaView>
@@ -242,7 +238,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#DBE9EE",
     width: "90%",
-    marginTop: "25%",
+    marginTop: "50%",
   },
   title: {
     fontSize: 30,
@@ -250,7 +246,7 @@ const styles = StyleSheet.create({
     color: "#000000",
   },
   startButton: {
-    width: "100%",
+    width: "70%",
     height: 70,
     borderRadius: 8,
     padding: 16,
@@ -267,7 +263,6 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 20,
     color: "#000000",
-    marginTop: 20,
   },
   question: {
     fontSize: 20,
@@ -290,12 +285,37 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#ffffff",
   },
+  messageWin: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#000000",
+    marginTop: 20,
+  },
+
+  imageWin: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
+  },
+  playerName: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#000000",
+    marginTop: 20,
+  },
+  playerScore: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#000000",
+    marginTop: 20,
+  },
   finishButton: {
-    width: "100%",
+    width: "70%",
+    height: 70,
     borderRadius: 8,
     padding: 16,
-    marginTop: 50,
-    backgroundColor: "#4F6D7A",
+    marginTop: 20,
+    backgroundColor: "#B22222",
     justifyContent: "center",
     alignItems: "center",
   },
