@@ -117,7 +117,7 @@ const HomeScreen = () => {
 
   const searchRoom2 = () => {
     //Envoyer socket
-    socket.emitWithAck("searchRoom", 0);
+    socket.emitWithAck("searchRoom", username);
   };
 
   return (

@@ -6,16 +6,18 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket as RawSocket } from 'socket.io';
-import RoomManagerService from './room.service';
-import { Get } from '@nestjs/common';
+import RoomManagerService, { Room } from './room.service';
 
 export type ClientToServerEvents = {
-  searchRoom: (payload: number) => void;
+  searchRoom: (payload: string) => void;
   playerSendResponse: (
     payload: number,
     callback: (score: number) => void,
   ) => void;
-  setIndex: (payload: number, callback: (index: number) => void) => void;
+  playerGoNextQuestion: (
+    payload: number,
+    callback: (score: number) => void,
+  ) => void;
 };
 
 // Recupere le premier parametre dans la definition des fonction
@@ -32,8 +34,9 @@ type ResponseForEvent<T extends keyof ClientToServerEvents> = Parameters<
 
 export type ServerToClientEvents = {
   playerJoined: () => void;
-  nextQuestion: (status: { question: string; reponses: string[] }) => void;
-  setIndex: (status: { index: number }) => void;
+  nextQuestion: () => void;
+  endOfQuiz: (room: Room) => void;
+  nextQuestionREAL: () => void;
   roomStatusUpdated: (status: {
     players: string[];
     roomCurrentPlayers: number;
@@ -42,8 +45,9 @@ export type ServerToClientEvents = {
 };
 
 export type SocketData = {
-  score?: number;
+  roomId?: string;
   index?: number;
+  username?: string;
 };
 
 export type Socket = RawSocket<
@@ -56,10 +60,6 @@ export type Socket = RawSocket<
 @WebSocketGateway(4001, { cors: { origin: '*' } })
 export class EventsGateway {
   constructor(private readonly roomManagerService: RoomManagerService) {}
-  @Get('health')
-  healthCheck(): string {
-    return 'WebSocket server is running.';
-  }
 
   @WebSocketServer()
   server: Server<
@@ -74,13 +74,18 @@ export class EventsGateway {
     @MessageBody() payload: PayloadForEvent<'searchRoom'>,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('searchRoom', payload, client.id, client.handshake);
+    console.log('searchRoom', payload, client.id);
 
     // Logique pour rejoindre une room
-    const room = this.roomManagerService.findOrCreateRoom(client.id);
+    const room = this.roomManagerService.findOrCreateRoom(payload);
     const roomKey = `room/${room.id}`;
 
     client.join(roomKey);
+    client.data.roomId = room.id;
+
+    if (!client.data.username) {
+      client.data.username = payload;
+    }
 
     this.server.to(roomKey).emit('roomStatusUpdated', {
       players: [],
@@ -90,11 +95,8 @@ export class EventsGateway {
 
     this.server.to(client.id).emit('playerJoined');
 
-    if (room.users.length === this.roomManagerService.MAX_USERS_IN_ROOM) {
-      this.server.to(roomKey).emit('nextQuestion', {
-        question: 'slt',
-        reponses: [],
-      });
+    if (room.players.length === this.roomManagerService.MAX_USERS_IN_ROOM) {
+      this.server.to(roomKey).emit('nextQuestion');
     }
   }
 
@@ -103,49 +105,37 @@ export class EventsGateway {
     @MessageBody() payload: PayloadForEvent<'playerSendResponse'>,
     @ConnectedSocket() client: Socket,
   ): ResponseForEvent<'playerSendResponse'> {
-    if (!client.data.score) {
-      client.data.score = 0;
-    }
-
-    if (payload === +'idBonneReponse') {
-      client.data.score += 5;
+    const room = this.roomManagerService.findRoomById(client.data.roomId);
+    const idGoodAnswers: number[] = [3, 4, 1, 2, 4, 1, 3, 3, 4, 4];
+    let scoreIncrement: number;
+    if (payload === idGoodAnswers[room.indexQuestions]) {
+      scoreIncrement = +5;
     } else {
-      client.data.score -= 5;
-    }
-    this.server.to(client.rooms[0]).emit('nextQuestion', {
-      question: 'slt',
-      reponses: [],
-    });
-    return client.data.score;
-  }
-
-  @SubscribeMessage('setIndex')
-  onSetIndex(
-    @MessageBody() payload: PayloadForEvent<'setIndex'>,
-    @ConnectedSocket() client: Socket,
-  ) {
-    if (!client.data.index) {
-      client.data.index = 0;
+      scoreIncrement = -5;
     }
 
-    console.log('setIndex', payload, client.id, client.handshake);
-    client.data.index = payload;
+    const newPlayerScore = this.roomManagerService.incrementScore(
+      client.data.roomId,
+      client.data.username,
+      scoreIncrement,
+    );
+    room.indexQuestions += 1;
 
-    client.data.index += 1;
+    const roomKey = `room/${client.data.roomId}`;
+    if (room.indexQuestions === 10) {
+      if (room.players[0].score > room.players[1].score) {
+        room.winner = room.players[0].pseudo;
+        room.looser = room.players[1].pseudo;
+      } else {
+        room.winner = room.players[1].pseudo;
+        room.looser = room.players[0].pseudo;
+      }
+      console.log('winner: ' + room.winner);
+      this.server.to(roomKey).emit('endOfQuiz', room);
+    } else {
+      this.server.to(roomKey).emit('nextQuestionREAL');
+    }
 
-    this.server.to(client.rooms[0]).emit('setIndex', {
-      index: client.data.index,
-    });
-    console.log('Current index:', client.data.index);
-    return client.data.index;
+    return newPlayerScore;
   }
-
-  // @SubscribeMessage('events')
-  // handleEvent(
-  //   @MessageBody() data: string,
-  //   @ConnectedSocket() client: Socket,
-  // ): string {
-  //   console.log(client.id, client.handshake);
-  //   return data;
-  // }
 }

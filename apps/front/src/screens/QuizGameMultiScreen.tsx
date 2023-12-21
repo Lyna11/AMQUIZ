@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Pressable, Image, Dimensions } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
-
+import { doc, getDoc } from "firebase/firestore";
+import { useFirebase } from "../hooks/firebase";
 import { questions } from "../config/questions";
 import socket from "../socket";
+import { Player, Room } from "../../../back/src/events/room.service";
 
 export default function QuizScreen({ navigation, route }: any) {
+  const [receivedRoom, setReceivedRoom] = useState<Room | undefined>(undefined);
+  const [winnerPlayer , setwinnerPlayer ] = useState<Player | undefined>(undefined);
+  const [looserPlayer , setlooserPlayer ] = useState<Player | undefined>(undefined);
+  const [phraseGagnant , setPhraseGagnant ] = useState("Bravo");
+  const [phrasePerdant , setPhrasePerdant ] = useState("T'es nul Izan");
+  const [username, setUsername] = useState("");
   const { params } = route;
   const nomDuQuizz = params?.theme;
   const [data, setData] = useState(questions.naruto);
@@ -22,7 +30,28 @@ export default function QuizScreen({ navigation, route }: any) {
   const [finQuizz, setFinQuizz] = useState(false);
   const screenwidth: number = Dimensions.get("window").width;
   const screenheight: number = Dimensions.get("window").height;
+  const { db, isInitialized, currentUser } = useFirebase();
 
+  useEffect(() => {
+    if (!isInitialized) return;
+    const fetchUsername = async () => {
+      // Replace 'userId' with the actual user ID (you need to retrieve it from authentication or another source)
+      const userId = currentUser?.uid ?? null;
+      console.log({ userId });
+      if (!userId) return;
+
+      console.log({ userId });
+      const userDoc = await getDoc(doc(db, "Users", userId));
+
+      console.log({ userDoc });
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setUsername(userData.username);
+      }
+    };
+
+    fetchUsername();
+  }, [isInitialized]);
   useEffect(() => {
     if (isPaused) return;
 
@@ -81,64 +110,70 @@ export default function QuizScreen({ navigation, route }: any) {
   }, [selectedAnswer, currentQuestion]);
 
   useEffect(() => {
-    const onNextQuestion = (score: number) => {
-      navigation.navigate("QuizGameMultiScreen", { score: score });
+    const onNextQuestionREAL = () => {
+      setIndex((index) => index + 1);
+      setCountdown(7);
     };
-    socket.on("nextQuestion", onNextQuestion(1));
-
+    socket.on("nextQuestionREAL", onNextQuestionREAL);
     return () => {
-      socket.off("nextQuestion");
+      socket.off("nextQuestionREAL", onNextQuestionREAL);
     };
-  }, [index]);
+  }, [score]);
 
   useEffect(() => {
-    const onSetIndex = (index: number) => {
-      navigation.navigate("QuizGameMultiScreen", { index: index });
+    const handleEndOfQuiz = async (room: Room) => {
+      setReceivedRoom(() => {
+        const winnerPlayer = room.players.find(player => player.pseudo === room.winner);
+        setwinnerPlayer(winnerPlayer);
+        console.log('winner: ' + room.winner);
+        console.log('looser: ' + room.looser);
+        
+        const looserPlayer = room.players.find(player => player.pseudo === room.looser);
+        setlooserPlayer(looserPlayer);
+  
+        return room;
+      });
     };
-
-    socket.on("setIndex", onSetIndex(index));
-
+  
+    socket.on('endOfQuiz', handleEndOfQuiz);
+  
     return () => {
-      socket.off("setIndex");
+      socket.off("endOfQuiz", handleEndOfQuiz);
     };
   }, []);
+  
+  
+  
 
   const sendResponse = async (idReponse: number) => {
-    const response = await socket.emitWithAck("playerSendResponse", idReponse);
-    console.log(response);
+    const repsonseScore = await socket.emitWithAck("playerSendResponse", idReponse);
+    setScore(repsonseScore);
+    console.log("score: "+ score);
   };
 
-  const setIndexSocket = async (index: number) => {
-    const leRetour = await socket.emitWithAck("setIndex", index);
-    console.log(leRetour);
-  };
-
-  const handleAnswerClick = (answerId: number) => {
-    setIndex((prevIndex) => {
-      setIndexSocket(prevIndex + 1);
-      return prevIndex + 1;
-    });
-    setCountdown(7);
-    setSelectedAnswer(null);
-    sendResponse(answerId);
-  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
         <View style={styles.container}>
-          <Text style={styles.title}>{`Quiz ${nomDuQuizz} !`}</Text>
-
+          <Text style={styles.title}>{`Quiz multijoueur`}</Text>
           {finQuizz ? (
             <SafeAreaView style={{ backgroundColor: "#DBE9EE", height: screenheight }}>
               <View style={{ flex: 1, alignItems: "center", marginTop: "25%" }}>
                 <View>
                   <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
+                  <Text style={styles.title}>
+            {username === receivedRoom?.winner
+              ? "Félicitations ! Vous avez gagné le quiz."
+              : username === receivedRoom?.looser
+              ? "Dommage ! Vous avez perdu le quiz."
+              : "Le quiz est terminé."}
+          </Text>
                     <Image source={require("../../assets/img/trophee.png")} style={{ width: screenwidth * 0.5, aspectRatio: 1 / 1 }} />
-                    <Text style={{ fontSize: 30, fontWeight: "bold", color: "#000000", marginTop: 50 }}>NOM_DU_JOUEUR</Text>
-                    <Text style={{ fontSize: 28, fontWeight: "bold", color: "#000000" }}>{`Score : ${score}`}</Text>
-                    <Text style={{ fontSize: 16, color: "#000000", marginTop: 40 }}>NOM_DU_JOUEUR_2</Text>
-                    <Text style={{ fontSize: 16, color: "#000000" }}>{`Score : ${score}`}</Text>
+                    <Text style={{ fontSize: 30, fontWeight: "bold", color: "#000000", marginTop: 50 }}>{receivedRoom?.winner}</Text>
+                    <Text style={{ fontSize: 28, fontWeight: "bold", color: "#000000" }}>{`Score : ${winnerPlayer?.score}`}</Text>
+                    <Text style={{ fontSize: 16, color: "#000000", marginTop: 40 }}>{receivedRoom?.looser}</Text>
+                    <Text style={{ fontSize: 16, color: "#000000" }}>{`Score : ${looserPlayer?.score}`}</Text>
                   </View>
 
                   <TouchableOpacity
@@ -165,7 +200,7 @@ export default function QuizScreen({ navigation, route }: any) {
 
                 <View style={{ marginTop: 10 }}>
                   {currentQuestion?.choices.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={() => handleAnswerClick(item.id)} style={{ borderColor: "red", padding: 10 }}>
+                    <TouchableOpacity key={index} onPress={() => sendResponse(item.id)} style={{ borderColor: "red", padding: 10 }}>
                       <View style={styles.cards}>
                         <Text style={{ color: selectedAnswer === item.id ? (selectedAnswer === currentQuestion.answerId ? "green" : "red") : undefined }}>
                           {item.id} - {item.answer}
