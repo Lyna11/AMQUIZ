@@ -1,5 +1,5 @@
 export interface UserModel {
-  id: number;
+  uid: string;
   username: string;
   level: number;
   profilePic: string;

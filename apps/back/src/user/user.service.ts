@@ -40,8 +40,8 @@ export class UserService {
   }
 
   // Récupère un joueur par son ID
-  public findOne(id: number): UserModel {
-    const user: UserModel = this.users.find((user) => user.id === id);
+  public findOne(uid: string): UserModel {
+    const user: UserModel = this.users.find((user) => user.uid === uid);
     if (!user) {
       throw new NotFoundException('User not found.');
     }
@@ -50,21 +50,20 @@ export class UserService {
 
   // Créer un joueur
   public create(user: UserModel): UserModel {
-    // Récupère le premier ID disponible
-    const maxId: number = Math.max(...this.users.map((user) => user.id), 0);
-    const id: number = maxId + 1;
+    // Récupère le premier ID disponible ==> gérer par Firebase
+    //const maxId: number = Math.max(...this.users.map((user) => user.uid), 0);
+    //const uid: string = maxId + 1;
     // Ajout du joueur créé aux joueurs existants
     const newUser: UserModel = {
-      ...user,
-      id,
+      ...user
     };
     this.users.push(newUser);
     return newUser;
   }
 
   // Supprime un joueur existant
-  public delete(id: number): void {
-    const index: number = this.users.findIndex((user) => user.id === id);
+  public delete(uid: string): void {
+    const index: number = this.users.findIndex((user) => user.uid === uid);
     // Pas de joueur correspondant
     if (index === -1) {
       throw new NotFoundException('Joueur introuvable');
@@ -73,16 +72,15 @@ export class UserService {
   }
 
   // Modifie un joueur existant
-  public update(id: number, user: UserModel): UserModel {
-    const index: number = this.users.findIndex((user) => user.id === id);
+  public update(uid: string, user: UserModel): UserModel {
+    const index: number = this.users.findIndex((user) => user.uid === uid);
     // Pas de joueur correspondant
     if (index === -1) {
       throw new NotFoundException('Joueur introuvable');
     }
     // Mise à jour du joueur
     const updtUser: UserModel = {
-      ...user,
-      id,
+      ...user
     };
     this.users[index] = updtUser;
     return updtUser;

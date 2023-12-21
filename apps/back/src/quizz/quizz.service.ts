@@ -11,28 +11,23 @@ export class QuizzService {
 
   // Constructeur
   constructor() {
-    this.fetchQuizzs;
+    this.loadQuizzs();
   }
 
   // Charge la collection des Quizzs de Firebase
   private async loadQuizzs(): Promise<void> {
-    try {
-      const quizzCollection = await admin.firestore().collection('Quizz').get();
-      quizzCollection.forEach((doc) => {
-        const quizzData = doc.data() as QuizzModel;
-        quizzData.questions = questions[quizzData.theme];
-        this.quizzs.push(quizzData);
-      });
-    } catch (error) {
-      console.error(error);
-      throw new Error('Erreur lors du chargement des quizzs');
-    }
-  }
-
-  // Méthode de vérification Quizzs
-  private async fetchQuizzs(): Promise<void> {
     if (this.quizzs.length === 0) {
-      await this.loadQuizzs();
+      try {
+        const quizzCollection = await admin.firestore().collection('Quizz').get();
+        quizzCollection.forEach((doc) => {
+          const quizzData = doc.data() as QuizzModel;
+          quizzData.questions = questions[quizzData.theme];
+          this.quizzs.push(quizzData);
+        });
+      } catch (error) {
+        console.error(error);
+        throw new Error('Erreur lors du chargement des quizzs');
+      }
     }
   }
 
@@ -52,7 +47,7 @@ export class QuizzService {
 
   // Créer un quizz
   public create(quizz: QuizzModel): QuizzModel {
-    // Récupère le premier ID disponible
+    // Récupère le premier ID disponible 
     const maxId: number = Math.max(...this.quizzs.map((quizz) => quizz.id), 0);
     const id: number = maxId + 1;
     // Ajout du quizz créér au quizzs existants
