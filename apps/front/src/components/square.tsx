@@ -1,19 +1,65 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, Text, ImageProps, TouchableOpacity, useWindowDimensions } from "react-native";
 
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useFirebase } from "../hooks/firebase";
+
 type RoundedSquareProps = {
-  montant: string;
+  montant: number;
   image: ImageProps["source"];
   piece: ImageProps["source"];
 };
 
 const RoundedSquare: React.FC<RoundedSquareProps> = ({ montant, image, piece }) => {
   const { width, height } = useWindowDimensions();
+  const { currentUser, db } = useFirebase();
 
   const contentWidth = width * 0.8;
+  const updateUserData = async () => {
+    // Récupérez l'ID de l'utilisateur connecté
+    const userId = currentUser?.uid;
+    if (!userId) return;
+
+    try {
+      // Obtenez le document de l'utilisateur
+      const userDoc = await getDoc(doc(db, "Users", userId));
+
+      if (userDoc.exists()) {
+        // Obtenez les données actuelles de l'utilisateur
+        const userData = userDoc.data();
+
+        // Vérifiez si l'utilisateur a assez d'argent
+        const newMoney = userData.money - montant; // Soustrayez le coût du coffre
+        const newChestCount = userData.chestCount + 1; // Ajoutez 1 au compteur de coffre
+
+        if (newMoney < 0) {
+          // L'utilisateur n'a pas assez d'argent
+          console.log("Pas assez d'argent !");
+          return;
+        }
+
+        // Mettez à jour les données de l'utilisateur dans Firebase
+        await updateDoc(doc(db, "Users", userId), {
+          money: newMoney,
+          chestCount: newChestCount,
+        });
+
+        console.log("Données utilisateur mises à jour avec succès !");
+      } else {
+        console.log("Aucun document utilisateur trouvé !");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des données utilisateur :", error);
+    }
+  };
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        // Appeler la fonction d'actualisation des données lorsque le coffre est cliqué
+        updateUserData();
+      }}>
       <View style={styles.content}>
         <Image
           source={image} // Remplacez le chemin par le chemin réel de votre image
@@ -50,8 +96,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 90, // Ajustez la largeur de l'image selon vos besoins
-    height: 90, // Ajustez la hauteur de l'image selon vos besoins
+    width: 100, // Ajustez la largeur de l'image selon vos besoins
+    height: 80, // Ajustez la hauteur de l'image selon vos besoins
     marginBottom: 8,
   },
   image2: {

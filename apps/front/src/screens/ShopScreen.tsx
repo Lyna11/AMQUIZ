@@ -1,24 +1,26 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, SafeAreaView, useWindowDimensions } from "react-native";
 import RoundedSquare from "../components/square";
+import RoundedSquareMoney from "../components/squareMoney";
 
 export default function BoutiqueScreen() {
   const { width, height } = useWindowDimensions();
+
   // Rendu
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <Title_ text="COFFRES" />
         <View style={styles.line}>
-          <RoundedSquare montant="20" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
-          <RoundedSquare montant="30" image={require("../../assets/img/coffre2.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
-          <RoundedSquare montant="40" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquare montant={20} image={require("../../assets/img/coffreCommun.png")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquare montant={30} image={require("../../assets/img/coffreRare.png")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquare montant={40} image={require("../../assets/img/coffreLegendaire.png")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
         </View>
         <Title_ text="PIECES" />
         <View style={styles.line}>
-          <RoundedSquare montant="0000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
-          <RoundedSquare montant="0000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
-          <RoundedSquare montant="0000" image={require("../../assets/img/coffre.jpg")} piece={require("../../assets/img/coin.png")}></RoundedSquare>
+          <RoundedSquareMoney euros="2€" image={require("../../assets/img/coin.png")} piece={require("../../assets/img/coin.png")}></RoundedSquareMoney>
+          <RoundedSquareMoney euros="4€" image={require("../../assets/img/coin.png")} piece={require("../../assets/img/coin.png")}></RoundedSquareMoney>
+          <RoundedSquareMoney euros="6€" image={require("../../assets/img/coin.png")} piece={require("../../assets/img/coin.png")}></RoundedSquareMoney>
         </View>
       </View>
     </SafeAreaView>
