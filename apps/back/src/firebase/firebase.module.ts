@@ -8,12 +8,9 @@ import {
   FirebaseModuleOptionsFactory,
 } from './firebase.interface';
 import { getFirebaseAdmin } from '../utils';
-import { FirebaseService } from './firebase.service';
 
 @Global()
-@Module({
-  providers: [FirebaseService],
-})
+@Module({})
 export class FirebaseModule {
   public static forRoot(options: FirebaseModuleOptions): DynamicModule {
     const provider: Provider<FirebaseAdmin> = {
