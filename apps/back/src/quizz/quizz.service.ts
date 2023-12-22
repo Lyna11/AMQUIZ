@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as admin from 'firebase-admin';
@@ -31,16 +30,6 @@ export class QuizzService {
       }
     }
   }
-=======
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { QuizzModel } from '../quizz/quizz.interface';
-import { Questions } from '../questions/questions.interface';
-
-@Injectable()
-export class QuizzService {
-  private quizzs: Array<QuizzModel> = [];
->>>>>>> yoann
 
   // Récupère toutes les instances de quizz
   public findAll(): Array<QuizzModel> {
@@ -49,6 +38,7 @@ export class QuizzService {
       id: 417,
       questions: {},
       players: [],
+      theme: ''
     };
 
     return [testQuizz, ...this.quizzs];

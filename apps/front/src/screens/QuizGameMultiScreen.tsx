@@ -159,7 +159,9 @@ export default function QuizScreen({ navigation, route }: any) {
                 <View>
                   <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
                     <Text style={styles.title}>
-                      {username === receivedRoom?.winner
+                      {looserPlayer?.score === winnerPlayer?.score
+                        ? "Egalité"
+                        : username === receivedRoom?.winner
                         ? "Félicitations ! Vous avez gagné le quiz."
                         : username === receivedRoom?.looser
                         ? "Dommage ! Vous avez perdu le quiz."

@@ -14,10 +14,7 @@ export class QuizzController {
 
   @Get(':id')
   public findOne(@Param('id', ParseIntPipe) id: number): QuizzModel {
-<<<<<<< HEAD
     console.log('[QUIZZ] - findOne()');
-=======
->>>>>>> yoann
     return this.quizzService.findOne(id);
   }
 }

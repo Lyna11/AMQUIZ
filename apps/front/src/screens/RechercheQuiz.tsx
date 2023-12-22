@@ -24,14 +24,14 @@ export default function RechercheQuiz() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFD700",
+    backgroundColor: "#1E90FF",
     alignItems: "center",
     justifyContent: "center",
   },
   titleBarContainer: {
     width: "100%",
     height: 50,
-    backgroundColor: "#FFD700",
+    backgroundColor: "#1E90FF",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#000000",
+    color: "white",
   },
   line: {
     flexDirection: "row",
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#000000",
+    color: "white",
   },
   image: {
     width: 50,
