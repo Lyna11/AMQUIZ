@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 interface QuestionsChoice {
+=======
+export interface QuestionChoice {
+>>>>>>> yoann
   id: number;
   answer: string;
 }

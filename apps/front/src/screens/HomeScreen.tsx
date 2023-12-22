@@ -9,6 +9,10 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { doc, getDoc } from "firebase/firestore";
 import { useFirebase } from "../hooks/firebase";
+import ProfileImgSelector from "../components/ProfileImgSelector";
+import ProfileUserInfos from "../components/ProfileUserInfos";
+import ProfileUserEdit from "../components/ProfileUserEdit";
+import socket from "../socket";
 
 const HomeScreen = () => {
   useEffect(() => {
@@ -107,6 +111,40 @@ const HomeScreen = () => {
     navigate("Suppression");
   };
 
+  //Partie socket
+  useEffect(() => {
+    const onPlayerJoined = () => {
+      //Afficher page recherche Quiz
+      navigate("RechercheQuiz");
+    };
+    // subscribe to sockets
+    socket.on("playerJoined", onPlayerJoined);
+
+    return () => {
+      // clean subscriptions to socket
+      socket.off("playerJoined", onPlayerJoined);
+    };
+  }, []);
+
+  useEffect(() => {
+    const nextQuestion = () => {
+      //Afficher page question
+      navigate("QuizGameMultiScreen");
+    };
+    // subscribe to sockets
+    socket.on("nextQuestion", nextQuestion);
+
+    return () => {
+      // clean subscriptions to socket
+      socket.off("nextQuestion", nextQuestion);
+    };
+  }, []);
+
+  const searchRoom2 = () => {
+    //Envoyer socket
+    socket.emitWithAck("searchRoom", username);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
@@ -158,7 +196,7 @@ const HomeScreen = () => {
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={searchRoom2}>
               <Text style={styles.text}>Jouer</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => navigate("QuizScreen")}>

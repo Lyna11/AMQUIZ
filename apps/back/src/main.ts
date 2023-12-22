@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable prettier/prettier */
+=======
+>>>>>>> yoann
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
+<<<<<<< HEAD
 // Import Firebase
 import * as admin from 'firebase-admin';
 
@@ -18,6 +22,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(process.env.API_PORT);
   console.log("Listening on port " + process.env.API_PORT);
+=======
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const config: ConfigService = app.get(ConfigService);
+  await app.listen(config.get<string>('API_PORT') || 4000);
+>>>>>>> yoann
   app.enableCors();
 }
 bootstrap();

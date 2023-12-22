@@ -11,6 +11,8 @@ import QuizGameScreen from "./src/screens/QuizGameScreen";
 import ShopScreen from "./src/screens/ShopScreen";
 import QuizScreen from "./src/screens/QuizScreen";
 import SuppressionCompteScreen from "./src/screens/SuppressionCompteScreen";
+import RechercheQuiz from "./src/screens/RechercheQuiz";
+import QuizGameMultiScreen from "./src/screens/QuizGameMultiScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +26,8 @@ const App = () => {
         <Stack.Screen name="QuizScreen" component={QuizScreen} options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="QuizGameScreen" component={QuizGameScreen} options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="Suppression" component={SuppressionCompteScreen} options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="RechercheQuiz" component={RechercheQuiz} options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="QuizGameMultiScreen" component={QuizGameMultiScreen} options={{ headerShown: false, gestureEnabled: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

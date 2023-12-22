@@ -8,6 +8,7 @@ describe('QuizzService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [QuizzService],
     }).compile();
+
     service = module.get<QuizzService>(QuizzService);
   });
 
