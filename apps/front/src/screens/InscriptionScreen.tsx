@@ -5,7 +5,16 @@ import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { setDoc, doc } from "firebase/firestore";
+import {} from "firebase/firestore";
+import {
+  getFirestore, // Add this line to import getFirestore
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc, // Add this line to import getDocs
+} from "firebase/firestore";
 
 import { useFirebase } from "../hooks/firebase";
 
@@ -22,12 +31,12 @@ const InscriptionScreen = () => {
   const [emailInvalide, setEmailInvalide] = useState(false);
   const [motsDePasseDifferents, setMotsDePasseDifferents] = useState(false);
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
 
-  const checkExistingEmail = (email) => {
+  const checkExistingEmail = (email: string) => {
     return new Promise((resolve, reject) => {
       fetchSignInMethodsForEmail(auth, email)
         .then((signInMethods) => {
@@ -43,6 +52,22 @@ const InscriptionScreen = () => {
           reject(error);
         });
     });
+  };
+  const checkExistingUsername = async (username: string) => {
+    const usersRef = collection(db, "Users");
+    const q = query(usersRef, where("username", "==", username));
+
+    try {
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.size > 0) {
+        return true; // Username already exists
+      } else {
+        return false; // Username is available
+      }
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleSubmit = async () => {
@@ -68,8 +93,9 @@ const InscriptionScreen = () => {
 
     try {
       const emailExiste = await checkExistingEmail(email);
+      const usernameExiste = await checkExistingUsername(nom);
 
-      if (!emailExiste) {
+      if (!emailExiste && !usernameExiste) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, motDePasse);
         const user = userCredential.user;
 
@@ -85,13 +111,16 @@ const InscriptionScreen = () => {
           rareChestCount: 0,
           legChestCount: 0,
           uid: user.uid,
+          userPics: [1],
         });
-
-        console.log("After Firestore write");
 
         navigation.navigate("Connexion");
       } else {
-        setErrorMessage("L'e-mail est déjà utilisé");
+        if (emailExiste) {
+          setErrorMessage("L'e-mail est déjà utilisé");
+        } else {
+          setErrorMessage("Le pseudo est déjà utilisé, veuillez en choisir un autre");
+        }
       }
     } catch (error) {
       setErrorMessage(error.message);

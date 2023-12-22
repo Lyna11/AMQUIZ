@@ -9,10 +9,10 @@ import { Player, Room } from "../../../back/src/events/room.service";
 
 export default function QuizScreen({ navigation, route }: any) {
   const [receivedRoom, setReceivedRoom] = useState<Room | undefined>(undefined);
-  const [winnerPlayer , setwinnerPlayer ] = useState<Player | undefined>(undefined);
-  const [looserPlayer , setlooserPlayer ] = useState<Player | undefined>(undefined);
-  const [phraseGagnant , setPhraseGagnant ] = useState("Bravo");
-  const [phrasePerdant , setPhrasePerdant ] = useState("T'es nul Izan");
+  const [winnerPlayer, setwinnerPlayer] = useState<Player | undefined>(undefined);
+  const [looserPlayer, setlooserPlayer] = useState<Player | undefined>(undefined);
+  const [phraseGagnant, setPhraseGagnant] = useState("Bravo");
+  const [phrasePerdant, setPhrasePerdant] = useState("T'es nul Izan");
   const [username, setUsername] = useState("");
   const { params } = route;
   const nomDuQuizz = params?.theme;
@@ -123,34 +123,30 @@ export default function QuizScreen({ navigation, route }: any) {
   useEffect(() => {
     const handleEndOfQuiz = async (room: Room) => {
       setReceivedRoom(() => {
-        const winnerPlayer = room.players.find(player => player.pseudo === room.winner);
+        const winnerPlayer = room.players.find((player) => player.pseudo === room.winner);
         setwinnerPlayer(winnerPlayer);
-        console.log('winner: ' + room.winner);
-        console.log('looser: ' + room.looser);
-        
-        const looserPlayer = room.players.find(player => player.pseudo === room.looser);
+        console.log("winner: " + room.winner);
+        console.log("looser: " + room.looser);
+
+        const looserPlayer = room.players.find((player) => player.pseudo === room.looser);
         setlooserPlayer(looserPlayer);
-  
+
         return room;
       });
     };
-  
-    socket.on('endOfQuiz', handleEndOfQuiz);
-  
+
+    socket.on("endOfQuiz", handleEndOfQuiz);
+
     return () => {
       socket.off("endOfQuiz", handleEndOfQuiz);
     };
   }, []);
-  
-  
-  
 
   const sendResponse = async (idReponse: number) => {
     const repsonseScore = await socket.emitWithAck("playerSendResponse", idReponse);
     setScore(repsonseScore);
-    console.log("score: "+ score);
+    console.log("score: " + score);
   };
-
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -162,13 +158,13 @@ export default function QuizScreen({ navigation, route }: any) {
               <View style={{ flex: 1, alignItems: "center", marginTop: "25%" }}>
                 <View>
                   <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
-                  <Text style={styles.title}>
-            {username === receivedRoom?.winner
-              ? "Félicitations ! Vous avez gagné le quiz."
-              : username === receivedRoom?.looser
-              ? "Dommage ! Vous avez perdu le quiz."
-              : "Le quiz est terminé."}
-          </Text>
+                    <Text style={styles.title}>
+                      {username === receivedRoom?.winner
+                        ? "Félicitations ! Vous avez gagné le quiz."
+                        : username === receivedRoom?.looser
+                        ? "Dommage ! Vous avez perdu le quiz."
+                        : "Le quiz est terminé."}
+                    </Text>
                     <Image source={require("../../assets/img/trophee.png")} style={{ width: screenwidth * 0.5, aspectRatio: 1 / 1 }} />
                     <Text style={{ fontSize: 30, fontWeight: "bold", color: "#000000", marginTop: 50 }}>{receivedRoom?.winner}</Text>
                     <Text style={{ fontSize: 28, fontWeight: "bold", color: "#000000" }}>{`Score : ${winnerPlayer?.score}`}</Text>
@@ -184,7 +180,7 @@ export default function QuizScreen({ navigation, route }: any) {
                       setScore(0);
                       setCountdown(7);
                       setFinQuizz(false);
-                      navigation.navigate("QuizScreen");
+                      navigation.navigate("Home");
                     }}>
                     <Text style={styles.counter}>Revenir</Text>
                   </TouchableOpacity>
