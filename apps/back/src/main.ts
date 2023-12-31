@@ -7,7 +7,7 @@ import { AppModule } from './app.module';
 import * as admin from 'firebase-admin';
 
 async function bootstrap() {
-  const serviceAccount = require('/Users/felixchab/Documents/Git/AMQUIZ/amquiz-react-firebase-adminsdk-4yw63-b2004ca0b6.json');
+  const serviceAccount = require('../../../amquiz-react-firebase-adminsdk-4yw63-b2004ca0b6.json');
   
   // Firebase Admin App
   admin.initializeApp({
@@ -16,8 +16,14 @@ async function bootstrap() {
   });
   
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
+
   await app.listen(process.env.API_PORT);
   console.log("Listening on port " + process.env.API_PORT);
-  app.enableCors();
 }
 bootstrap();
