@@ -3,15 +3,18 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, ScrollVi
 import ProfileImgSelector from "../components/ProfileImgSelector";
 import ProfileUserInfos from "../components/ProfileUserInfos";
 import ProfileUserEdit from "../components/ProfileUserEdit";
+import { doc, getDoc } from 'firebase/firestore';
+import { useFirebase } from '../hooks/firebase';
+
 
 export default function ProfilScreen() {
   const [active, setActive] = useState(0);
 
   // Rendu
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, height:'100%' }}>
       <ScrollView>
-        <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE" }}>
+        <View style={{ flex: 1, alignItems: "center", backgroundColor: "#DBE9EE", height:'100%' }}>
           <View style={styles.mainContainer}>
             <ProfileUserInfos />
 

@@ -18,8 +18,8 @@ interface SKILLS {
 const SKILL = 
   {
     id: 1,
-    nom: 'Boule de prout',
-    description: 'Intoxiquer vos adversaires avec le prout du golem Tristan',
+    nom: 'Nauséabombe',
+    description: 'Intoxiquer vos adversaires avec les champignons du golem Tristan',
     image: 'https://static.vecteezy.com/system/resources/previews/012/629/299/original/realistic-brown-smoke-effect-png.png'
 }
 
@@ -33,20 +33,20 @@ interface ATTAQUES {
 const ATTAQUES = [
   {
     id:1,
-    nom: 'Genjutsu de konokaka',
-    description: 'Genjutsu aveuglant du village caché de Konokaka',
+    nom: 'Genjutsu de konoka',
+    description: 'Genjutsu aveuglant du village caché de Konoka',
     image: 'https://media.tenor.com/6y_92TOocysAAAAC/huh-sus.gif',
   },
   {
     id:2,
-    nom: 'Genjutsu de konokaka',
-    description: 'Genjutsu aveuglant du village caché de Konokaka',
+    nom: 'Genjutsu de konoka',
+    description: 'Genjutsu aveuglant du village caché de Konoka',
     image: 'https://media.tenor.com/6y_92TOocysAAAAC/huh-sus.gif',
   },
   {
     id:3,
-    nom: 'Genjutsu de konokaka',
-    description: 'Genjutsu aveuglant du village caché de Konokaka',
+    nom: 'Genjutsu de konoka',
+    description: 'Genjutsu aveuglant du village caché de Konoka',
     image: 'https://media.tenor.com/6y_92TOocysAAAAC/huh-sus.gif',
   }
 ]

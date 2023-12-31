@@ -1,140 +1,106 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, FlatList, Dimensions} from 'react-native';
-
+import { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Image, SafeAreaView, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useFirebase } from '../hooks/firebase';
+import { collection, getDocs, query, where, getDoc, doc, updateDoc } from 'firebase/firestore';
+import ProfilScreen from '../screens/ProfileScreen';
 
 const ProfileImgSelector: React.FC = () => {
-    const [active, setActive] = useState(0);
+  const [images, setImages] = useState<string[]>([]);
+  const { db, isInitialized, currentUser } = useFirebase();
+  const navigation = useNavigation();
 
-    
+  useEffect(() => {
+    const fetchUserPics = async () => {
+      if (!isInitialized || !currentUser) return;
 
-const screenwidth = Dimensions.get('window').width;
-const screenheight = Dimensions.get('window').height;
+      const userId = currentUser?.uid ?? null;
+      const userPics: string[] = [];
+      const fetchedImagesUrl: string[] = [];
 
+      const userDoc = await getDoc(doc(db, "Users", userId));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
 
-interface DATA_IMG_1 {
-  url: string,
-  nom: string
-}
+        if (userData && userData.userPics) {
+          userPics.push(...userData.userPics);
+        }
+      }
 
-const DATA_IMG_1 = [
-{ 
-    url: 'https://i.postimg.cc/zf7Lbdx4/IMG-2135.png',
-    nom: 'img1'
-},
-{
-    url: 'https://i.postimg.cc/zf7Lbdx4/IMG-2135.png',
-    nom: 'img2'
-},
-{
-    url: 'https://i.postimg.cc/zf7Lbdx4/IMG-2135.png',
-    nom: 'img3'
-},
-{
-    url: 'https://i.postimg.cc/zf7Lbdx4/IMG-2135.png',
-    nom: 'img4'
-}
-]
+      const picQuery2 = query(collection(db, 'Pictures'), where('id', 'in', userPics));
+      const picDocs2 = await getDocs(picQuery2);
 
-const DATA_IMG_2 = [
-{
-    url: 'https://cdn.discordapp.com/attachments/1166801102482702437/1176882339796746323/20231122_144951.jpg?ex=65707c17&is=655e0717&hm=46a88162127963de0542d708c7f7fb6429a586bb97b35814f052ddafaf93664c&',
-    nom: 'img1'
-},
-{
-    url: 'https://cdn.discordapp.com/attachments/1166801102482702437/1176882339796746323/20231122_144951.jpg?ex=65707c17&is=655e0717&hm=46a88162127963de0542d708c7f7fb6429a586bb97b35814f052ddafaf93664c&',
-    nom: 'img2'
-},
-{
-    url: 'https://cdn.discordapp.com/attachments/1166801102482702437/1176882339796746323/20231122_144951.jpg?ex=65707c17&is=655e0717&hm=46a88162127963de0542d708c7f7fb6429a586bb97b35814f052ddafaf93664c&',
-    nom: 'img3'
-},
-{
-    url: 'https://cdn.discordapp.com/attachments/1166801102482702437/1176882339796746323/20231122_144951.jpg?ex=65707c17&is=655e0717&hm=46a88162127963de0542d708c7f7fb6429a586bb97b35814f052ddafaf93664c&',
-    nom: 'img4'
-}
-]
+      picDocs2.forEach((picDoc2) => {
+        if (picDoc2.exists()) {
+          const picData = picDoc2.data();
+          if (picData && picData.url) {
+            fetchedImagesUrl.push(picData.url);
+          }
+        }
+      });
 
-    {/* const [active, setActive] = useState(0); */}
+      setImages(fetchedImagesUrl);
+    };
+
+    fetchUserPics();
+  }, [isInitialized, currentUser, db]);
 
 
-return (
+  const [profilePicUpdated, setProfilePicUpdated] = useState(false);
+  const updateProfilePic = async (imageUrl: string) => {
+    if (!currentUser) return;
 
-    <SafeAreaView>
-        <ScrollView>
-        <View style={styles.container}>
+    const userId = currentUser.uid;
+    const userRef = doc(db, 'Users', userId);
 
-            <Text style={{fontWeight:'bold', marginTop:50, fontSize:24, textAlign:'center'}}>ONE PIECE</Text>
-
-            <ScrollView 
-            snapToInterval={screenwidth} 
-            decelerationRate='fast'
-            alwaysBounceHorizontal={true}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            style={styles.displayImgSelector}>
-            {DATA_IMG_1.map(item => (
-                <View key={item.nom}>
-                {/* <Text>{item.nom}</Text> */}
-                <Image
-                source={{uri:item.url}}
-                style={{
-                    width: screenwidth/3,
-                    aspectRatio: 1/1,  
-                    resizeMode: 'cover',
-                    marginRight: 30
-                }}
-                />
-                </View>
-            ))}
-            </ScrollView>
-
-            <Text style={{fontWeight:'bold', marginTop:50, fontSize:24, textAlign:'center'}}>EVANGELION</Text>
-
-            <ScrollView 
-            snapToInterval={screenwidth} 
-            decelerationRate='fast'
-            alwaysBounceHorizontal={true}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            style={styles.displayImgSelector}>
-            {DATA_IMG_2.map(item => (
-                <View key={item.nom}>
-                {/* <Text>{item.nom}</Text> */}
-                <Image
-                source={{uri:item.url}}
-                style={{
-                    width: screenwidth/3,
-                    aspectRatio: 1/1,  
-                    resizeMode: 'cover',
-                    marginRight: 30
-                }}
-                />
-                </View>
-            ))}
-            </ScrollView>
-
-
-        </View>
-        </ScrollView>
-    </SafeAreaView>
-    
-)}
-
-    
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        margin: 'auto',
-    },
-
-    displayImgSelector: {
-        marginTop:40,
-    },
-
-    displayImgSelectorOff: {
-        display:'none'
+    try {
+      await updateDoc(userRef, {
+        profilePic: imageUrl, 
+      });
+      setProfilePicUpdated(true);
+      console.log('Image de profil mise à jour ');
+      navigation.navigate('Profile');
+    } catch (error) {
+      console.error('Erreur lors du changement de l\'image de profil :', error);
     }
-})
+  };
 
+  const screenwidth = Dimensions.get('window').width;
+
+  const renderItem = ({ item }: { item: string }) => (
+    <TouchableOpacity key={item} onPress={() => updateProfilePic(item)}>
+      <Image
+        source={{ uri: item }}
+        style={{
+          width: screenwidth / 3,
+          aspectRatio: 1 / 1,
+          resizeMode: 'cover',
+          marginRight: 30,
+        }}
+      />
+    </TouchableOpacity>
+  );
+
+  return (
+    <SafeAreaView>
+      <FlatList
+        horizontal
+        data={images}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.container}
+      />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    margin: 'auto',
+    marginTop: 40,
+  },
+});
 
 export default ProfileImgSelector;
